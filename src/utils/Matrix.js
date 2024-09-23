@@ -42,8 +42,9 @@ function rescaling_list(lista) {
   return lista;
 }
 
-export function getMatrixElements(dataset, type = "planet_type") {
+export function getMatrixElements(datasett, type = "planet_type") {
   /* create matrix*/
+  let dataset = JSON.parse(JSON.stringify(datasett));
   let names = [];
   let planets_type = [];
   let pl_discmethod = [];
@@ -307,6 +308,14 @@ function getDifferenceMatrix(
 
           let categorical_values_stars_distance = 0;
           if (stars_type[index] != stars_type[index2]) {
+            if(isNaN(differences2[stars_type[index]]) || differences2[stars_type[index]] === undefined){
+              console.log("index")
+              console.log(stars_type[index])
+            }
+
+            if(isNaN(differences2[stars_type[index2]]) || differences2[stars_type[index2]] === undefined){
+              console.log("index2")
+            }
             categorical_values_stars_distance =
               differences2[stars_type[index]] -
               differences2[stars_type[index2]];
@@ -322,6 +331,22 @@ function getDifferenceMatrix(
           }
 
           
+          if(isNaN(numerical_values_distances)){
+            console.log("numerical_values_distances")
+          }
+          if(isNaN(temp_mass)){
+            console.log("temp_mass")
+          }
+          if(isNaN(temp_st_distance)){
+            console.log("temp_st_distance")
+          }
+          if(isNaN(temp_pl_radj)){
+            console.log("temp_pl_radj")
+          }
+
+          if(isNaN(categorical_values_stars_distance)){
+            console.log("categorical_values_stars_distance")
+          }
           
           numerical_values_distances = Math.sqrt(100000*numerical_values_distances)
           categorical_values_distance = Math.sqrt(100000*categorical_values_distance+categorical_values_stars_distance)
@@ -332,7 +357,6 @@ function getDifferenceMatrix(
       distance_matrix.push(l);
     }
   });
-
 
   return [labels_name, distance_matrix];
 }
@@ -662,38 +686,38 @@ export default class CustomMatrix extends React.Component {
     const planetTypes = {};
     const discoveryMethods = {};
     const stellarTypes = {};
+    let tt = 0;
     // Categorize data by planet_type and pl_discmethod
     Object.values(data).forEach((planet) => {
       let { planet_type, pl_discmethod,stellar_type, pl_radj, st_dist, display_name} = planet;
-      
+      let stellar_type2 = null;
       if(stellar_type == "Y"){
-        stellar_type = "(Y) 80–500 K"
+        stellar_type2 = "(Y) 80–500 K"
       }
       if(stellar_type == "T"){
-        stellar_type = "(T) 500–1,500 K"
+        stellar_type2 = "(T) 500–1,500 K"
       }
       if(stellar_type == "M"){
-        stellar_type = "(M) 2,400–3,700 K"
+        stellar_type2 = "(M) 2,400–3,700 K"
       }
       if(stellar_type == "K"){
-        stellar_type = "(K) 3,700–5,200 K"
+        stellar_type2 = "(K) 3,700–5,200 K"
       }
       if(stellar_type == "G"){
-        stellar_type = "(G) 5,200–6,000 K"
+        stellar_type2 = "(G) 5,200–6,000 K"
       }
       if(stellar_type == "F"){
-        stellar_type = "(F) 6,000–7,500 K"
+        stellar_type2 = "(F) 6,000–7,500 K"
       }
       if(stellar_type == "A"){
-        stellar_type = "(A) 7,500–10,000 K"
+        stellar_type2 = "(A) 7,500–10,000 K"
       }
       if(stellar_type == "B"){
-        stellar_type = "(B) 10,000–30,000 K"
+        stellar_type2 = "(B) 10,000–30,000 K"
       }
       if(stellar_type == "O"){
-        stellar_type = "(O) 30,000–50,000 K"
+        stellar_type2 = "(O) 30,000–50,000 K"
       }
-
 
       // Prepare the data for planet_type legend
       let bc =  'rgba(255, 0, 0, 1)';
@@ -760,12 +784,12 @@ export default class CustomMatrix extends React.Component {
         };
       }
 
-      if (!stellarTypes[stellar_type] && selectedType === "stellar_type") {
+      if (!stellarTypes[stellar_type2] && selectedType === "stellar_type") {
         
-        stellarTypes[stellar_type] = {
-          label: stellar_type,
+        stellarTypes[stellar_type2] = {
+          label: stellar_type2,
           data: [],
-          backgroundColor: this.getColor(stellar_type,0.4), // Adjusted opacity to 30%
+          backgroundColor: this.getColor(stellar_type2,0.4), // Adjusted opacity to 30%
           pointStyle: "circle",
           pointRadius: 3, // Smaller point radius
           hoverRadius: 6, // Larger radius on hover
@@ -778,7 +802,7 @@ export default class CustomMatrix extends React.Component {
           pointBorderColor: (ctx) => {
             const index = ctx.dataIndex;
             const point = ctx.dataset.data[index];
-            return point.borderColor || this.getColor(stellar_type,0.4); // Default to black if not set
+            return point.borderColor || this.getColor(stellar_type2,0.4); // Default to black if not set
           },
           pointBorderWidth: (ctx) => {
             const index = ctx.dataIndex;
@@ -816,30 +840,35 @@ export default class CustomMatrix extends React.Component {
 
       if(selectedType === "stellar_type"){
         if(dataFilters[display_name] === undefined || dataFilters[display_name] == false){
-          bc =  this.getColor(stellar_type,0.4);
+          bc =  this.getColor(stellar_type2,0.4);
         }
         distances.some((item) => {
           if(item.name == display_name){
-            stellarTypes[stellar_type].data.push({ x: item.x, y: item.y,name:display_name, borderColor: bc, borderWidth: 1 });
+            stellarTypes[stellar_type2].data.push({ x: item.x, y: item.y,name:display_name, borderColor: bc, borderWidth: 1 });
             return;
           }
         })
       }
     });
-
+    if(selectedType === "planet_type"){
     // Add planet types datasets to the chart
     Object.values(planetTypes).forEach((dataset) => {
       chartData.datasets.push(dataset);
     });
+    }
+
+    else if(selectedType === "pl_discmethod"){
 
     // Add discovery methods datasets to the chart
     Object.values(discoveryMethods).forEach((dataset) => {
       chartData.datasets.push(dataset);
     });
-
+    }
+    else{
     Object.values(stellarTypes).forEach((dataset) => {
       chartData.datasets.push(dataset);
     });
+  }
 
     
     return chartData;
