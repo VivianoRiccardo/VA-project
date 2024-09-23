@@ -32,10 +32,11 @@ for key in d2:
     if "planet_ids" in d2[key] and "stellar_type" in d2[key] and "st_mass" in d2[key] and "st_optmag" in d2[key] and "st_dist" in d2[key]:
         for i in range(len(d2[key]["planet_ids"])):
             if d2[key]["planet_ids"][i] in d:
+                d[d2[key]["planet_ids"][i]]["number_of_planets"] = len(d2[key]["planet_ids"])
                 d[d2[key]["planet_ids"][i]]["stellar_type"] = d2[key]["stellar_type"]
                 d[d2[key]["planet_ids"][i]]["st_mass"] = float(d2[key]["st_mass"])
                 d[d2[key]["planet_ids"][i]]["st_optmag"] = float(d2[key]["st_optmag"])
-                d[d2[key]["planet_ids"][i]]["earth_dist"] = float(d2[key]["st_dist"])
+                d[d2[key]["planet_ids"][i]]["st_dist"] = float(d2[key]["st_dist"])#parsec from earth distance
             else:
                 print("No")
 with open('nasa_datafile.pickle', 'wb') as handle:
