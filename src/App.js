@@ -215,13 +215,13 @@ bubbleFilterCallback(res){
       <div style={styles.container}>
         <div style={styles.chartContainer}>
           <CustomScatter
-            data={data}
+            data={JSON.parse(JSON.stringify(data))}
             dataFilters={this.state.dataFilters}
             callback={(ret) =>{this.scatterFilterCallback(ret)}} 
           />
         </div>
         <div style={styles.chartContainer}>
-          <CustomParallel data={data}
+          <CustomParallel data={JSON.parse(JSON.stringify(data))}
                           dataFilters={this.state.dataFilters}
                           counter={this.state.counter}
                           updated={this.state.updated}
@@ -229,10 +229,10 @@ bubbleFilterCallback(res){
           />
         </div>
         <div style={styles.chartContainer}>
-          <CustomBubble data={data} callback={(ret) =>{this.bubbleFilterCallback(ret)}} dataFilters={this.state.dataFilters} />
+          <CustomBubble data={JSON.parse(JSON.stringify(data))} callback={(ret) =>{this.bubbleFilterCallback(ret)}} dataFilters={this.state.dataFilters} />
         </div>
         <div style={styles.chartContainer}>
-          <CustomBar data={data}/>
+          <CustomBar data={JSON.parse(JSON.stringify(data))}/>
         </div>
       </div>
     </>
