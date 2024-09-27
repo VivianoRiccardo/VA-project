@@ -2,7 +2,6 @@ import { Matrix } from "ml-matrix";
 import React from "react";
 import computeMDS from "./simple_mds";
 import _ from 'lodash';
-
 import {
   Chart as ChartJS,
   LinearScale,
@@ -19,7 +18,6 @@ import zoomPlugin from 'chartjs-plugin-zoom';
 ChartJS.register(
   zoomPlugin
 );
-
 function print_shit(e, array) {
   console.log(e);
   console.log(array);
@@ -32,7 +30,6 @@ ChartJS.register(
   Legend,
   ChartDataLabels
 );
-
 function rescaling_list(lista) {
   let minimum = Math.min.apply(Math, lista);
   let maximum = Math.max.apply(Math, lista);
@@ -41,10 +38,8 @@ function rescaling_list(lista) {
   });
   return lista;
 }
-
-export function getMatrixElements(datasett, type = "planet_type") {
+export function getMatrixElements(dataset, type = "planet_type") {
   /* create matrix*/
-  let dataset = JSON.parse(JSON.stringify(datasett));
   let names = [];
   let planets_type = [];
   let pl_discmethod = [];
@@ -65,7 +60,6 @@ export function getMatrixElements(datasett, type = "planet_type") {
      "Terrestrial"
      "Unknown"*/
   let temp_names = [];
-
   for (let i in dataset) {
     names.push(dataset[i]["display_name"]);
     if (!temp_names.includes(dataset[i][type])) {
@@ -110,8 +104,6 @@ export function getMatrixElements(datasett, type = "planet_type") {
     discovery_date.push(parseInt(dataset[i]["discovery_date"]));
     pl_radj.push(dataset[i]["pl_radj"]);
   }
-
-
   masses_display.map((item, index) => {
     let number1 = item.split(" ");
     let type1 = number1[1];
@@ -122,7 +114,6 @@ export function getMatrixElements(datasett, type = "planet_type") {
   st_distances.map((item, index) => {
     st_distances[index] = parseFloat(item);
   });
-
   pl_radj.map((item, index) => {
     pl_radj[index] = parseFloat(item);
   });
@@ -141,7 +132,6 @@ export function getMatrixElements(datasett, type = "planet_type") {
       star_mass[index]
     ]);
   });
-
   const returnData = {
     names: names,
     discovery_date: discovery_date,
@@ -160,12 +150,10 @@ export function getMatrixElements(datasett, type = "planet_type") {
   } else {
     returnData["pl_discmethod"] = pl_discmethod;
   }*/
-
   return {
     ...returnData,
   };
 }
-
 export function getListNames(dataset) {
   /* create matrix*/
   let names = [];
@@ -179,14 +167,11 @@ export function getListNames(dataset) {
      "Neptune-like"
      "Terrestrial"
      "Unknown"*/
-
   for (let i in dataset) {
     names.push(dataset[i]["display_name"]);
   }
-
   return names;
 }
-
 function getDifferenceMatrix(
   dataset,
   mass_display_flag = true,
@@ -229,7 +214,6 @@ function getDifferenceMatrix(
   differences["Super Earth"] = 0.33;
   differences["Neptune-like"] = 0.66;
   differences["Gas Giant"] = 1;
-
   let v = 0.125;
   let differences2 = {};
   differences2["O"] = 0;
@@ -263,18 +247,12 @@ function getDifferenceMatrix(
     if (type1 === "Earths") number1 /= 317.8;
     masses_display[index] = number1;
   });
-
   pl_radj.map((item, index) => {
     pl_radj[index] = parseFloat(item);
   });
-
-
   let rescaled_masses_display = rescaling_list(masses_display);
   let rescaled_st_distances = rescaling_list(st_distances);
   let rescaled_pl_radj = rescaling_list(pl_radj);
-
-
-
   names.map((item, index) => {
     let l = [];
     labels_name.push(names[index]);
@@ -289,7 +267,6 @@ function getDifferenceMatrix(
             rescaled_pl_radj[index] - rescaled_pl_radj[index2]
           );
           temp_pl_radj *= temp_pl_radj;
-
           let temp_mass =
             rescaled_masses_display[index] - rescaled_masses_display[index2];
           temp_mass *= temp_mass;
@@ -297,7 +274,6 @@ function getDifferenceMatrix(
           if (mass_display_flag) numerical_values_distances += temp_mass;
           if (st_distance_flag) numerical_values_distances += temp_st_distance;
           if (pl_radj_flag) numerical_values_distances += temp_pl_radj;
-
           let categorical_values_distance = 0;
           if (planets_type[index] != planets_type[index2]) {
             categorical_values_distance =
@@ -305,48 +281,19 @@ function getDifferenceMatrix(
               differences[planets_type[index2]];
               categorical_values_distance*=categorical_values_distance;
           }
-
           let categorical_values_stars_distance = 0;
           if (stars_type[index] != stars_type[index2]) {
-            if(isNaN(differences2[stars_type[index]]) || differences2[stars_type[index]] === undefined){
-              console.log("index")
-              console.log(stars_type[index])
-            }
-
-            if(isNaN(differences2[stars_type[index2]]) || differences2[stars_type[index2]] === undefined){
-              console.log("index2")
-            }
             categorical_values_stars_distance =
               differences2[stars_type[index]] -
               differences2[stars_type[index2]];
               categorical_values_stars_distance *= categorical_values_stars_distance;
-
-
           }
-
           if (!planet_type_flag) categorical_values_distance = 0;
           
           if (!star_type_flag){ 
             categorical_values_stars_distance = 0
           }
-
           
-          if(isNaN(numerical_values_distances)){
-            console.log("numerical_values_distances")
-          }
-          if(isNaN(temp_mass)){
-            console.log("temp_mass")
-          }
-          if(isNaN(temp_st_distance)){
-            console.log("temp_st_distance")
-          }
-          if(isNaN(temp_pl_radj)){
-            console.log("temp_pl_radj")
-          }
-
-          if(isNaN(categorical_values_stars_distance)){
-            console.log("categorical_values_stars_distance")
-          }
           
           numerical_values_distances = Math.sqrt(100000*numerical_values_distances)
           categorical_values_distance = Math.sqrt(100000*categorical_values_distance+categorical_values_stars_distance)
@@ -357,10 +304,8 @@ function getDifferenceMatrix(
       distance_matrix.push(l);
     }
   });
-
   return [labels_name, distance_matrix];
 }
-
 // function getFinalMatrix(
 //   dataset,
 //   mass_display_flag = true,
@@ -387,7 +332,6 @@ function getDifferenceMatrix(
 //     let i = { x: item[0], y: item[1] };
 //     data_list.push(i);
 //   });
-
 //   let data = {
 //     labels: returning_values[0], // a list of labels
 //     datasets: [
@@ -403,23 +347,19 @@ function getDifferenceMatrix(
 //       },
 //     ],
 //   };
-
 //   const options = {
 //     legend: {
 //       display: false,
 //     },
 //     onClick: print_shit,
 //   };
-
 //   const plugin = {
 //     datalabels: {
 //       display: false,
 //     },
 //   };
-
 //   return [options, data, plugin];
 // }
-
 // export default class CustomMatrix extends Component {
 //   // shouldComponentUpdate(nextProps, nextState) {
 //   //   // Only re-render if specific props or state changes
@@ -435,15 +375,12 @@ function getDifferenceMatrix(
 //   //   ) {
 //   //     return true;
 //   //   }
-
 //   //   return false;
 //   // }
-
 //   constructor(props) {
 //     super(props);
 //     this.state = { loader: false };
 //   }
-
 //   render() {
 //     let l = getFinalMatrix(
 //       this.props.dataset,
@@ -477,7 +414,6 @@ function getFinalMatrix(
   lr = 50,
   max_steps = 3
 ) {
-
   //console.log("hey")
   const returning_values = getDifferenceMatrix(
     dataset,
@@ -487,9 +423,7 @@ function getFinalMatrix(
     planet_type_flag,
     star_type_flag
   );
-
   const distance_matrix = returning_values[1];
-
   // let d = null;
   // if (max_steps > 0) {
   let d = computeMDS(distance_matrix,lr,max_steps)
@@ -497,14 +431,11 @@ function getFinalMatrix(
   //   // Handle the case where max_steps is 0
   //   d = computeMDS(distance_matrix); // or another fallback
   // }
-
   const data_list = new Array(d.length);
   for (let i = 0; i < d.length; i++) {
     data_list[i] = { x: d[i][0], y: d[i][1], name:returning_values[0][i] };
   }
-
   return data_list;
-
   const data = {
     labels: returning_values[0],
     datasets: [
@@ -516,23 +447,18 @@ function getFinalMatrix(
       },
     ],
   };
-
   const options = {
     legend: { display: false },
     onClick: print_shit,
   };
-
   const plugin = {
     datalabels: { display: false },
   };
-
   return [options, data, plugin];
 }
-
 export default class CustomMatrix extends React.Component {
   constructor(props) {
          super(props);
-
          let d = getFinalMatrix(props.dataset,props.mass_display_flag,props.st_distance_flag,props.pl_radj_flag,props.planet_type_flag,props.star_type_flag,props.learning_rate,props.max_steps);
          this.state = {
            dataset: props.dataset,
@@ -558,7 +484,6 @@ export default class CustomMatrix extends React.Component {
        componentDidMount(){
         this.setChartData();
        }
-
        componentDidUpdate(prevProps, prevState) {
         // Avoid calling setState if chartData hasn't actually changed
         let chartDataHasChanged = !_.isEqual(this.state.dataFilters,prevState.dataFilters);
@@ -594,18 +519,14 @@ export default class CustomMatrix extends React.Component {
           this.setChartData();
         }
       }
-
        
-
        setChartData(){
         let d=this.state.distances;
         if(this.state.compute){
           d = getFinalMatrix(this.state.dataset,this.state.mass_display_flag,this.state.st_distance_flag,this.state.pl_radj_flag,this.state.planet_type_flag,this.state.star_type_flag,this.state.learning_rate,this.state.max_steps)
         }
-
         this.setState({chartData: this.prepareChartData(this.state.dataset,d,this.state.selectedType,this.state.learning_rate,this.state.max_steps, this.state.mass_display_flag,this.state.st_distance_flag,this.state.pl_radj_flag,this.state.planet_type_flag,this.state.star_type_flag,this.state.dataFilters)})
        }
-
        shouldComponentUpdate(nextProps, nextState) {
         // Deep comparison for dataFilters
         const dataFiltersChanged = !_.isEqual(nextProps.dataFilters, this.props.dataFilters);
@@ -613,7 +534,6 @@ export default class CustomMatrix extends React.Component {
         // Deep comparison for chartData
         const chartDataChanged = !_.isEqual(nextState.chartData, this.state.chartData);
         
-
         return (
           nextProps.mass_display_flag !== this.props.mass_display_flag ||
           nextProps.zoom !== this.props.zoom || 
@@ -631,10 +551,8 @@ export default class CustomMatrix extends React.Component {
       
       static getDerivedStateFromProps(nextProps, prevState) {
         
-
         let flag = !_.isEqual(nextProps.dataFilters, prevState.dataFilters);
         let flag2 = nextProps.zoom !== prevState.zoom;
-
         if((flag || flag2) && nextProps.mass_display_flag === prevState.mass_display_flag &&  
           nextProps.st_distance_flag === prevState.st_distance_flag && 
           nextProps.pl_radj_flag === prevState.pl_radj_flag && 
@@ -675,7 +593,6 @@ export default class CustomMatrix extends React.Component {
         // No state change required
         return null;
       }
-
   prepareChartData (data,distances,selectedType, lr, max_steps, mass_display_flag = true,
     st_distance_flag = true,
     pl_radj_flag = true,
@@ -686,39 +603,38 @@ export default class CustomMatrix extends React.Component {
     const planetTypes = {};
     const discoveryMethods = {};
     const stellarTypes = {};
-    let tt = 0;
     // Categorize data by planet_type and pl_discmethod
+    console.table(data)
     Object.values(data).forEach((planet) => {
       let { planet_type, pl_discmethod,stellar_type, pl_radj, st_dist, display_name} = planet;
-      let stellar_type2 = null;
+      
       if(stellar_type == "Y"){
-        stellar_type2 = "(Y) 80–500 K"
+        stellar_type = "(Y) 80–500 K"
       }
       if(stellar_type == "T"){
-        stellar_type2 = "(T) 500–1,500 K"
+        stellar_type = "(T) 500–1,500 K"
       }
       if(stellar_type == "M"){
-        stellar_type2 = "(M) 2,400–3,700 K"
+        stellar_type = "(M) 2,400–3,700 K"
       }
       if(stellar_type == "K"){
-        stellar_type2 = "(K) 3,700–5,200 K"
+        stellar_type = "(K) 3,700–5,200 K"
       }
       if(stellar_type == "G"){
-        stellar_type2 = "(G) 5,200–6,000 K"
+        stellar_type = "(G) 5,200–6,000 K"
       }
       if(stellar_type == "F"){
-        stellar_type2 = "(F) 6,000–7,500 K"
+        stellar_type = "(F) 6,000–7,500 K"
       }
       if(stellar_type == "A"){
-        stellar_type2 = "(A) 7,500–10,000 K"
+        stellar_type = "(A) 7,500–10,000 K"
       }
       if(stellar_type == "B"){
-        stellar_type2 = "(B) 10,000–30,000 K"
+        stellar_type = "(B) 10,000–30,000 K"
       }
       if(stellar_type == "O"){
-        stellar_type2 = "(O) 30,000–50,000 K"
+        stellar_type = "(O) 30,000–50,000 K"
       }
-
       // Prepare the data for planet_type legend
       let bc =  'rgba(255, 0, 0, 1)';
       if (!planetTypes[planet_type] && selectedType === "planet_type") {
@@ -735,7 +651,6 @@ export default class CustomMatrix extends React.Component {
           datalabels: {
             display: false,
           },
-
           pointBorderColor: (ctx) => {
             const index = ctx.dataIndex;
             const point = ctx.dataset.data[index];
@@ -746,7 +661,6 @@ export default class CustomMatrix extends React.Component {
             const point = ctx.dataset.data[index];
             return point.borderWidth || 1; // Default to 1 if not set
           },
-
         };
       }
       // Prepare the data for pl_discmethod legend
@@ -754,7 +668,6 @@ export default class CustomMatrix extends React.Component {
         !discoveryMethods[pl_discmethod] &&
         selectedType === "pl_discmethod"
       ) {
-
         
         
         discoveryMethods[pl_discmethod] = {
@@ -769,7 +682,6 @@ export default class CustomMatrix extends React.Component {
           datalabels: {
             display: false,
           },
-
           pointBorderColor: (ctx) => {
             const index = ctx.dataIndex;
             const point = ctx.dataset.data[index];
@@ -780,16 +692,14 @@ export default class CustomMatrix extends React.Component {
             const point = ctx.dataset.data[index];
             return point.borderWidth || 1; // Default to 1 if not set
           },
-
         };
       }
-
-      if (!stellarTypes[stellar_type2] && selectedType === "stellar_type") {
+      if (!stellarTypes[stellar_type] && selectedType === "stellar_type") {
         
-        stellarTypes[stellar_type2] = {
-          label: stellar_type2,
+        stellarTypes[stellar_type] = {
+          label: stellar_type,
           data: [],
-          backgroundColor: this.getColor(stellar_type2,0.4), // Adjusted opacity to 30%
+          backgroundColor: this.getColor(stellar_type,0.4), // Adjusted opacity to 30%
           pointStyle: "circle",
           pointRadius: 3, // Smaller point radius
           hoverRadius: 6, // Larger radius on hover
@@ -798,24 +708,20 @@ export default class CustomMatrix extends React.Component {
           datalabels: {
             display: false,
           },
-
           pointBorderColor: (ctx) => {
             const index = ctx.dataIndex;
             const point = ctx.dataset.data[index];
-            return point.borderColor || this.getColor(stellar_type2,0.4); // Default to black if not set
+            return point.borderColor || this.getColor(stellar_type,0.4); // Default to black if not set
           },
           pointBorderWidth: (ctx) => {
             const index = ctx.dataIndex;
             const point = ctx.dataset.data[index];
             return point.borderWidth || 1; // Default to 1 if not set
           },
-
         };
       }
-
       // Push data into corresponding datasets
       if(selectedType === "planet_type"){
-
         if(dataFilters[display_name] === undefined || dataFilters[display_name] == false){
           bc =  this.getColor(planet_type,0.4);
         }
@@ -837,46 +743,33 @@ export default class CustomMatrix extends React.Component {
           }
         })
       }
-
       if(selectedType === "stellar_type"){
         if(dataFilters[display_name] === undefined || dataFilters[display_name] == false){
-          bc =  this.getColor(stellar_type2,0.4);
+          bc =  this.getColor(stellar_type,0.4);
         }
         distances.some((item) => {
           if(item.name == display_name){
-            stellarTypes[stellar_type2].data.push({ x: item.x, y: item.y,name:display_name, borderColor: bc, borderWidth: 1 });
+            stellarTypes[stellar_type].data.push({ x: item.x, y: item.y,name:display_name, borderColor: bc, borderWidth: 1 });
             return;
           }
         })
       }
     });
-    if(selectedType === "planet_type"){
     // Add planet types datasets to the chart
     Object.values(planetTypes).forEach((dataset) => {
       chartData.datasets.push(dataset);
     });
-    }
-
-    else if(selectedType === "pl_discmethod"){
-
     // Add discovery methods datasets to the chart
     Object.values(discoveryMethods).forEach((dataset) => {
       chartData.datasets.push(dataset);
     });
-    }
-    else{
     Object.values(stellarTypes).forEach((dataset) => {
       chartData.datasets.push(dataset);
     });
-  }
-
     
     return chartData;
-
     
   };
-
-
   // Example function to determine color based on type
   getColor(type, opacity){
     opacity = opacity.toString()
@@ -904,14 +797,19 @@ export default class CustomMatrix extends React.Component {
       "(M) 2,400–3,700 K":"rgba(166,219,160,"+opacity+")",
       "(T) 500–1,500 K":"rgba(90,174,97,"+opacity+")",
       "(Y) 80–500 K":"rgba(0,68,27,"+opacity+")",
-
-
+      "O":"rgba(64,0,75,"+opacity+")",
+      "B":"rgba(118,42,131,"+opacity+")",
+      "A":"rgba(153,112,171,"+opacity+")",
+      "F":"rgba(194,165,207,"+opacity+")",
+      "G":"rgba(231,212,232,"+opacity+")",
+      "K":"rgba(217,240,211,"+opacity+")",
+      "M":"rgba(166,219,160,"+opacity+")",
+      "T":"rgba(90,174,97,"+opacity+")",
+      "Y":"rgba(0,68,27,"+opacity+")",
     };
     return colors[type] || "rgba(75, 192, 192, 0.6)";
   };
-
   
-
   render(){
   const options = {
     scales: {
@@ -987,7 +885,6 @@ export default class CustomMatrix extends React.Component {
         this.state.parentCallback(clickedPoint);
       }
     },
-
     responsive: true,
     maintainAspectRatio: false,
     elements: {
@@ -997,9 +894,7 @@ export default class CustomMatrix extends React.Component {
         hoverBorderColor: "rgba(0, 0, 0, 0.8)",
       },
     },
-
    
-
   };
   return (
     <div>
@@ -1007,9 +902,7 @@ export default class CustomMatrix extends React.Component {
       {this.state.chartData.datasets?.length > 0 && (
         <Scatter data={this.state.chartData} options={options} className="scatter_chart" />
       )}
-
       
-
     </div>
     </div>
     
