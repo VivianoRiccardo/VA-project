@@ -30,16 +30,20 @@ export class CustomBubble extends React.Component {
         axis_names: {'pl_massj': "MASS (J)", "pl_radj": "RADIUS (J)", "st_dist":"EARTH DISTANCE (Parsec)", 'number_of_planets':'N. PLANETS-SOLAR SYSTEM',"ua": "STAR DISTANCE (UA)"},
         reverse_axis_names: {"MASS (J)":'pl_massj', "RADIUS (J)":"pl_radj", "EARTH DISTANCE (Parsec)":"st_dist", 'N. PLANETS-SOLAR SYSTEM':'number_of_planets', "STAR DISTANCE (UA)":"ua"},
         different_planets : l[1].length,
-        colors : ["rgba(123,50,148,0.7)","rgba(194,165,207,0.7)", "rgba(166,219,160,0.7)", "rgba(0,136,55,0.7)", 'rgba(0,128,0,0.5)'],
+        colors : ["rgba(152,78,163,0.7)","rgba(0,150,150,0.7)", "rgba(255,127,0,0.7)", "rgba(77,175,74,0.7)", 'rgba(0,128,0,0.5)'],
         labels : l[1],
         temp_planet_type_labels:l[1],
         temp_disc_method_labels:l[3],
         temp_stellar_type_labels:l[4],
-        temp_planet_type_colors:["rgba(123,50,148,0.7)","rgba(194,165,207,0.7)", "rgba(166,219,160,0.7)", "rgba(0,136,55,0.7)", 'rgba(0,128,0,0.5)'],
-        temp_disc_method_colors:["rgba(64,0,75,0.7)","rgba(118,42,131,0.7)","rgba(153,112,171,0.7)","rgba(194,165,207,0.7)","rgba(231,212,232,0.7)",
-                                "rgba(217,240,211,0.7)","rgba(166,219,160,0.7)","rgba(90,174,97,0.7)","rgba(27,120,55,0.7)","rgba(0,68,27,0.7)"],
-        temp_stellar_type_colors:["rgba(64,0,75,0.7)","rgba(118,42,131,0.7)","rgba(153,112,171,0.7)","rgba(194,165,207,0.7)","rgba(231,212,232,0.7)",
-                                  "rgba(217,240,211,0.7)","rgba(166,219,160,0.7)","rgba(90,174,97,0.7)","rgba(27,120,55,0.7)"],
+        temp_planet_type_colors:["rgba(152,78,163,0.7)","rgba(0,150,150,0.7)", "rgba(255,127,0,0.7)", "rgba(77,175,74,0.7)", 'rgba(0,128,0,0.5)'],
+
+
+        temp_disc_method_colors:["rgba(0,150,150,0.7)","rgba(55,126,184,0.7)","rgba(77,175,74,0.7)","rgba(152,78,163,0.7)","rgba(255,127,0,0.7)",
+                                "rgba(255,255,51,0.7)","rgba(153,213,148,0.7)","rgba(153,153,153,0.7)","rgba(204,153,255,0.7)"],
+
+
+        temp_stellar_type_colors:["rgba(255,255,204,0.7)","rgba(255,237,160,0.7)","rgba(254,217,118,0.7)","rgba(254,178,76,0.7)","rgba(253,141,60,0.7)",
+                                  "rgba(252,78,42,0.7)","rgba(227,26,28,0.7)","rgba(189,0,38,0.7)","rgba(128,0,38,0.7)"],
         date:2011,
         selectedType:"planet_type",
         dates : l[2],
@@ -70,6 +74,7 @@ export class CustomBubble extends React.Component {
       this.goOnWithscrollPosition = this.goOnWithscrollPosition.bind(this);
       this.handleSelectLabelChange = this.handleSelectLabelChange.bind(this);
       this.handleZoom = this.handleZoom.bind(this);
+      this.sortWithPriority = this.sortWithPriority.bind(this);
 
     }
 
@@ -77,6 +82,29 @@ export class CustomBubble extends React.Component {
     let zoom = this.state.zoom;
     this.setState({zoom:!zoom})
   }
+
+  // Custom comparator function
+  sortWithPriority(strings, priorityOrder) {
+    // Custom comparator function
+    return strings.sort((a, b) => {
+        const indexA = priorityOrder.indexOf(a);
+        const indexB = priorityOrder.indexOf(b);
+
+        if (indexA !== -1 && indexB !== -1) {
+            // Both a and b are in the priority list
+            return indexA - indexB;
+        } else if (indexA !== -1) {
+            // Only a is in the priority list
+            return -1;
+        } else if (indexB !== -1) {
+            // Only b is in the priority list
+            return 1;
+        } else {
+            // Neither are in the priority list, fallback to alphabetical sort
+            return a.localeCompare(b);
+        }
+    });
+}
 
   turnDataToMenagableData(statedata){
     let stateDate = [];
@@ -165,6 +193,14 @@ export class CustomBubble extends React.Component {
 
 
     }
+
+
+    let priorityOrder1 = ["Gas Giant", "Neptune-like", "Super Earth", "Terrestrial"];
+    let priorityOrder2 = ["Transit","Radial Velocity", "Transit Timing Variations", "Microlensing", "Imaging", "Eclipse Timing Variations", "Pulsar Timing", "Pulsation Timing Variations", "Disk Kinematics", "Orbital Brightness Modulation", "Astrometry"];
+    let priorityOrder3 = ["(Y) 80–500 K", "(T) 500–1,500 K", "(M) 2,400–3,700 K","(K) 3,700–5,200 K","(G) 5,200–6,000 K","(F) 6,000–7,500 K","(A) 7,500–10,000 K", "(B) 10,000–30,000 K", "(O) 30,000–50,000 K"];
+    stateLabels = this.sortWithPriority(stateLabels, priorityOrder1)
+    this.sortWithPriority(stateLabels2, priorityOrder2)
+    this.sortWithPriority(stateLabels3, priorityOrder3)
     return [data,stateLabels,stateDate, stateLabels2, stateLabels3];
   }
 
@@ -315,9 +351,9 @@ export class CustomBubble extends React.Component {
   
 
   handleSelectLabelChange(e){
-    if(e.target.value == "pl_discmethod")
-    this.setState({different_planets:this.state.temp_disc_method_labels.length, labels:this.state.temp_disc_method_labels,colors:this.state.temp_disc_method_colors,selectedType:e.target.value},() =>{
-})
+    if(e.target.value == "pl_discmethod"){
+      this.setState({different_planets:this.state.temp_disc_method_labels.length, labels:this.state.temp_disc_method_labels,colors:this.state.temp_disc_method_colors,selectedType:e.target.value},() =>{
+})}
     else if(e.target.value == "stellar_type")
     this.setState({different_planets:this.state.temp_stellar_type_labels.length,labels:this.state.temp_stellar_type_labels,colors:this.state.temp_stellar_type_colors,selectedType:e.target.value})
 
@@ -331,7 +367,7 @@ export class CustomBubble extends React.Component {
       "margin-left":"5%"
     }
 
-    return(<div style={{ display: "flex", justifyContent: "space-between" }} ><center className="circle-container">
+    return(<><div style={{ display: "flex", justifyContent: "space-between" }} ><center className="circle-container">
       <div>
         <label>X</label>
         <select
@@ -379,9 +415,7 @@ export class CustomBubble extends React.Component {
           ))}
         </select>
       </div>
-      <div>
-        <button onClick={this.handleZoom}>{this.state.zoom?"Disable zoom":"Enable zoom"}</button>
-      </div>
+      
     </center>
           <div>
             <select onChange={this.handleSelectLabelChange} value={this.state.selectedType}>
@@ -390,7 +424,10 @@ export class CustomBubble extends React.Component {
               <option value={"stellar_type"}>Star Type</option>
             </select>
           </div>
-    </div>)
+    </div>
+    <div>
+    <button onClick={this.handleZoom}>{this.state.zoom?"Disable zoom":"Enable zoom"}</button>
+  </div></>)
   }
 
 

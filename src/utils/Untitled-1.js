@@ -60,6 +60,7 @@ export function getMatrixElements(dataset, type = "planet_type") {
      "Terrestrial"
      "Unknown"*/
   let temp_names = [];
+
   for (let i in dataset) {
     names.push(dataset[i]["display_name"]);
     if (!temp_names.includes(dataset[i][type])) {
@@ -104,6 +105,8 @@ export function getMatrixElements(dataset, type = "planet_type") {
     discovery_date.push(parseInt(dataset[i]["discovery_date"]));
     pl_radj.push(dataset[i]["pl_radj"]);
   }
+
+
   masses_display.map((item, index) => {
     let number1 = item.split(" ");
     let type1 = number1[1];
@@ -114,6 +117,7 @@ export function getMatrixElements(dataset, type = "planet_type") {
   st_distances.map((item, index) => {
     st_distances[index] = parseFloat(item);
   });
+
   pl_radj.map((item, index) => {
     pl_radj[index] = parseFloat(item);
   });
@@ -132,7 +136,7 @@ export function getMatrixElements(dataset, type = "planet_type") {
       star_mass[index]
     ]);
   });
-  discovery_date.sort()
+
   const returnData = {
     names: names,
     discovery_date: discovery_date,
@@ -151,6 +155,7 @@ export function getMatrixElements(dataset, type = "planet_type") {
   } else {
     returnData["pl_discmethod"] = pl_discmethod;
   }*/
+
   return {
     ...returnData,
   };
@@ -178,16 +183,8 @@ function getDifferenceMatrix(
   mass_display_flag = true,
   st_distance_flag = true,
   pl_radj_flag = true,
-  planet_type_flag = true,
-  star_type_flag = true
+  planet_type_flag = true
 ) {
-  /*console.log(mass_display_flag)
-  console.log(st_distance_flag)
-  console.log(pl_radj_flag)
-  console.log(planet_type_flag)
-  console.log(star_type_flag)
-  */
- 
   /*console.log("wewe1");
   console.log(mass_display_flag)
   console.log(st_distance_flag)
@@ -197,7 +194,6 @@ function getDifferenceMatrix(
   /* create matrix*/
   let names = [];
   let planets_type = [];
-  let stars_type = [];
   let masses_display = [];
   let st_distances = [];
   let pl_radj = [];
@@ -215,28 +211,17 @@ function getDifferenceMatrix(
   differences["Super Earth"] = 0.33;
   differences["Neptune-like"] = 0.66;
   differences["Gas Giant"] = 1;
-  let v = 0.125;
-  let differences2 = {};
-  differences2["O"] = 0;
-  differences2["B"] = v;
-  differences2["A"] = v*2;
-  differences2["F"] = v*3;
-  differences2["G"] = v*4;
-  differences2["K"] = v*5;
-  differences2["M"] = v*6;
-  differences2["T"] = v*7;
-  differences2["Y"] = 1;
   for (let i in dataset) {
     names.push(dataset[i]["display_name"]);
     planets_type.push(dataset[i]["planet_type"]);
-    stars_type.push(dataset[i]['stellar_type']);
     masses_display.push(dataset[i]["mass_display"]);
-    st_distances.push(dataset[i]["ua"]);
+    st_distances.push(dataset[i]["st_dist"]);
     pl_radj.push(dataset[i]["pl_radj"]);
     if (!all_planets_type.includes(dataset[i]["planet_type"])) {
       all_planets_type.push(dataset[i]["planet_type"]);
     }
   }
+  //console.log(all_planets_type)
   let temp_distance = [];
   let temp_radj = [];
   let temp_mass = [];
@@ -245,8 +230,11 @@ function getDifferenceMatrix(
     let number1 = item.split(" ");
     let type1 = number1[1];
     number1 = parseFloat(number1[0]);
-    if (type1 === "Earths") number1 /= 317.8;
+    if (type1 === "Jupiters") number1 *= 317.8;
     masses_display[index] = number1;
+  });
+  st_distances.map((item, index) => {
+    st_distances[index] = parseFloat(item);
   });
   pl_radj.map((item, index) => {
     pl_radj[index] = parseFloat(item);
@@ -275,31 +263,19 @@ function getDifferenceMatrix(
           if (mass_display_flag) numerical_values_distances += temp_mass;
           if (st_distance_flag) numerical_values_distances += temp_st_distance;
           if (pl_radj_flag) numerical_values_distances += temp_pl_radj;
+          numerical_values_distances = Math.sqrt(numerical_values_distances);
           let categorical_values_distance = 0;
           if (planets_type[index] != planets_type[index2]) {
             categorical_values_distance =
               differences[planets_type[index]] -
               differences[planets_type[index2]];
-              categorical_values_distance*=categorical_values_distance;
-          }
-          let categorical_values_stars_distance = 0;
-          if (stars_type[index] != stars_type[index2]) {
-            categorical_values_stars_distance =
-              differences2[stars_type[index]] -
-              differences2[stars_type[index2]];
-              categorical_values_stars_distance *= categorical_values_stars_distance;
-          }
+            if (categorical_values_distance < 0)
+              categorical_values_distance *= -1;
+          }/*
+          categorical_values_distance = 1;
           if (!planet_type_flag) categorical_values_distance = 0;
-          
-          if (!star_type_flag){ 
-            categorical_values_stars_distance = 0
-          }
-          
-          
-          numerical_values_distances = Math.sqrt(100000*numerical_values_distances)
-          categorical_values_distance = Math.sqrt(100000*categorical_values_distance+categorical_values_stars_distance)
-          //console.log(numerical_values_distances+categorical_values_distance)
-          l.push(numerical_values_distances+categorical_values_distance);
+          l.push(numerical_values_distances + categorical_values_distance);*/
+          l.push(1+numerical_values_distances);
         }
       });
       distance_matrix.push(l);
@@ -411,7 +387,6 @@ function getFinalMatrix(
   st_distance_flag = true,
   pl_radj_flag = true,
   planet_type_flag = true,
-  star_type_flag = true,
   lr = 50,
   max_steps = 3
 ) {
@@ -421,8 +396,7 @@ function getFinalMatrix(
     mass_display_flag,
     st_distance_flag,
     pl_radj_flag,
-    planet_type_flag,
-    star_type_flag
+    planet_type_flag
   );
   const distance_matrix = returning_values[1];
   // let d = null;
@@ -460,21 +434,19 @@ function getFinalMatrix(
 export default class CustomMatrix extends React.Component {
   constructor(props) {
          super(props);
-         let d = getFinalMatrix(props.dataset,props.mass_display_flag,props.st_distance_flag,props.pl_radj_flag,props.planet_type_flag,props.star_type_flag,props.learning_rate,props.max_steps);
+         let d = getFinalMatrix(props.dataset,props.mass_display_flag,props.st_distance_flag,props.pl_radj_flag,props.planet_type_flag,props.learning_rate,props.max_steps);
          this.state = {
            dataset: props.dataset,
-           zoom: props.zoom,
            mass_display_flag: props.mass_display_flag,
            st_distance_flag: props.st_distance_flag,
            pl_radj_flag: props.pl_radj_flag,
            planet_type_flag: props.planet_type_flag,
-           star_type_flag:props.star_type_flag,
            learning_rate: props.learning_rate,
            max_steps: props.max_steps,
            selectedType:props.selectedType,
            dataFilters:props.dataFilters,
            parentCallback:props.callback,
-           chartData:this.prepareChartData(props.dataset,d,props.selectedType,props.learning_rate,props.max_steps, props.mass_display_flag,props.st_distance_flag,props.pl_radj_flag,props.planet_type_flag,props.star_type_flag,props.dataFilters),
+           chartData:this.prepareChartData(props.dataset,d,props.selectedType,props.learning_rate,props.max_steps, props.mass_display_flag,props.st_distance_flag,props.pl_radj_flag,props.planet_type_flag,props.dataFilters),
            distances:d,
            chartDataDistances:{},
            compute:false,
@@ -496,9 +468,6 @@ export default class CustomMatrix extends React.Component {
           chartDataHasChanged = (!_.isEqual(this.state.mass_display_flag,prevState.mass_display_flag))
         }
         if(!chartDataHasChanged){
-          chartDataHasChanged = (this.state.zoom !== prevState.zoom)
-        }
-        if(!chartDataHasChanged){
           chartDataHasChanged = (!_.isEqual(this.state.st_distance_flag,prevState.st_distance_flag))
         }
         if(!chartDataHasChanged){
@@ -506,9 +475,6 @@ export default class CustomMatrix extends React.Component {
         }
         if(!chartDataHasChanged){
           chartDataHasChanged = (!_.isEqual(this.state.planet_type_flag,prevState.planet_type_flag))
-        }
-        if(!chartDataHasChanged){
-          chartDataHasChanged = (!_.isEqual(this.state.star_type_flag,prevState.star_type_flag))
         }
         if(!chartDataHasChanged){
           chartDataHasChanged = (!_.isEqual(this.state.max_steps,prevState.max_steps))
@@ -524,9 +490,9 @@ export default class CustomMatrix extends React.Component {
        setChartData(){
         let d=this.state.distances;
         if(this.state.compute){
-          d = getFinalMatrix(this.state.dataset,this.state.mass_display_flag,this.state.st_distance_flag,this.state.pl_radj_flag,this.state.planet_type_flag,this.state.star_type_flag,this.state.learning_rate,this.state.max_steps)
+          d = getFinalMatrix(this.state.dataset,this.state.mass_display_flag,this.state.st_distance_flag,this.state.pl_radj_flag,this.state.planet_type_flag,this.state.learning_rate,this.state.max_steps)
         }
-        this.setState({chartData: this.prepareChartData(this.state.dataset,d,this.state.selectedType,this.state.learning_rate,this.state.max_steps, this.state.mass_display_flag,this.state.st_distance_flag,this.state.pl_radj_flag,this.state.planet_type_flag,this.state.star_type_flag,this.state.dataFilters)})
+        this.setState({chartData: this.prepareChartData(this.state.dataset,d,this.state.selectedType,this.state.learning_rate,this.state.max_steps, this.state.mass_display_flag,this.state.st_distance_flag,this.state.pl_radj_flag,this.state.planet_type_flag,this.state.dataFilters)})
        }
        shouldComponentUpdate(nextProps, nextState) {
         // Deep comparison for dataFilters
@@ -534,14 +500,11 @@ export default class CustomMatrix extends React.Component {
         
         // Deep comparison for chartData
         const chartDataChanged = !_.isEqual(nextState.chartData, this.state.chartData);
-        
         return (
-          nextProps.mass_display_flag !== this.props.mass_display_flag ||
-          nextProps.zoom !== this.props.zoom || 
+          nextProps.mass_display_flag !== this.props.mass_display_flag || 
           nextProps.st_distance_flag !== this.props.st_distance_flag || 
           nextProps.pl_radj_flag !== this.props.pl_radj_flag || 
-          nextProps.planet_type_flag !== this.props.planet_type_flag ||
-          nextProps.star_type_flag !== this.props.star_type_flag || 
+          nextProps.planet_type_flag !== this.props.planet_type_flag || 
           nextProps.learning_rate !== this.props.learning_rate || 
           nextProps.selectedType !== this.props.selectedType ||
           nextProps.max_steps !== this.props.max_steps || 
@@ -553,42 +516,36 @@ export default class CustomMatrix extends React.Component {
       static getDerivedStateFromProps(nextProps, prevState) {
         
         let flag = !_.isEqual(nextProps.dataFilters, prevState.dataFilters);
-        let flag2 = nextProps.zoom !== prevState.zoom;
-        if((flag || flag2) && nextProps.mass_display_flag === prevState.mass_display_flag &&  
+        if(flag && nextProps.mass_display_flag === prevState.mass_display_flag && 
           nextProps.st_distance_flag === prevState.st_distance_flag && 
           nextProps.pl_radj_flag === prevState.pl_radj_flag && 
           nextProps.planet_type_flag === prevState.planet_type_flag && 
-          nextProps.star_type_flag === prevState.star_type_flag && 
           nextProps.learning_rate === prevState.learning_rate && 
           nextProps.selectedType === prevState.selectedType &&
           nextProps.max_steps === prevState.max_steps){
-            return {dataFilters:nextProps.dataFilters, compute:false, zoom:nextProps.zoom}
+            return {dataFilters:nextProps.dataFilters, compute:false}
           }
         else if(
           flag ||
-          nextProps.mass_display_flag !== prevState.mass_display_flag ||
-          flag2 || 
+          nextProps.mass_display_flag !== prevState.mass_display_flag || 
           nextProps.st_distance_flag !== prevState.st_distance_flag || 
           nextProps.pl_radj_flag !== prevState.pl_radj_flag || 
           nextProps.planet_type_flag !== prevState.planet_type_flag || 
-          nextProps.star_type_flag !== prevState.star_type_flag || 
           nextProps.learning_rate !== prevState.learning_rate || 
           nextProps.selectedType !== prevState.selectedType ||
           nextProps.max_steps !== prevState.max_steps || flag
         ) {
           return {
             mass_display_flag: nextProps.mass_display_flag,
-            zoom: nextProps.zoom,
             st_distance_flag: nextProps.st_distance_flag,
             pl_radj_flag: nextProps.pl_radj_flag,
             planet_type_flag: nextProps.planet_type_flag,
-            star_type_flag: nextProps.star_type_flag,
             learning_rate: nextProps.learning_rate,
             max_steps: nextProps.max_steps,
             selectedType: nextProps.selectedType,
             dataFilters:nextProps.dataFilters,
             compute:false,
-            distances:getFinalMatrix(nextProps.dataset,nextProps.mass_display_flag,nextProps.st_distance_flag,nextProps.pl_radj_flag,nextProps.planet_type_flag,nextProps.star_type_flag,nextProps.learning_rate,nextProps.max_steps)
+            distances:getFinalMatrix(nextProps.dataset,nextProps.mass_display_flag,nextProps.st_distance_flag,nextProps.pl_radj_flag,nextProps.planet_type_flag,nextProps.learning_rate,nextProps.max_steps)
           };
         }
         // No state change required
@@ -597,59 +554,20 @@ export default class CustomMatrix extends React.Component {
   prepareChartData (data,distances,selectedType, lr, max_steps, mass_display_flag = true,
     st_distance_flag = true,
     pl_radj_flag = true,
-    planet_type_flag = true,star_type_flag = true, dataFilters){
+    planet_type_flag = true, dataFilters){
     const chartData = {
       datasets: [],
     };
     const planetTypes = {};
     const discoveryMethods = {};
-    const stellarTypes = {};
     // Categorize data by planet_type and pl_discmethod
     Object.values(data).forEach((planet) => {
-      let { planet_type, pl_discmethod,stellar_type, pl_radj, st_dist, display_name} = planet;
-      let order_stellar = 0
-      if(stellar_type == "Y"){
-        stellar_type = "(Y) 80–500 K"
-      }
-      if(stellar_type == "T"){
-        stellar_type = "(T) 500–1,500 K"
-      }
-      if(stellar_type == "M"){
-        stellar_type = "(M) 2,400–3,700 K"
-      }
-      if(stellar_type == "K"){
-        stellar_type = "(K) 3,700–5,200 K"
-      }
-      if(stellar_type == "G"){
-        stellar_type = "(G) 5,200–6,000 K"
-      }
-      if(stellar_type == "F"){
-        stellar_type = "(F) 6,000–7,500 K"
-      }
-      if(stellar_type == "A"){
-        stellar_type = "(A) 7,500–10,000 K"
-      }
-      if(stellar_type == "B"){
-        stellar_type = "(B) 10,000–30,000 K"
-      }
-      if(stellar_type == "O"){
-        stellar_type = "(O) 30,000–50,000 K"
-      }
+      const { planet_type, pl_discmethod, pl_radj, st_dist, display_name} = planet;
       // Prepare the data for planet_type legend
       let bc =  'rgba(255, 0, 0, 1)';
       if (!planetTypes[planet_type] && selectedType === "planet_type") {
-        let order = 0;
-        if(planet_type == "Neptune-like"){
-          order = 1;
-        }
-        if(planet_type == "Super Earth"){
-          order = 2;
-        }
-        if(planet_type == "Terrestrial"){
-          order = 3;
-        }
+        
         planetTypes[planet_type] = {
-          order: order,
           label: planet_type,
           data: [],
           backgroundColor: this.getColor(planet_type,0.4), // Adjusted opacity to 30%
@@ -679,40 +597,8 @@ export default class CustomMatrix extends React.Component {
         selectedType === "pl_discmethod"
       ) {
         
-        let order = 0;
-        if(pl_discmethod == "Radial Velocity"){
-          order = 1;
-        }
-        if(pl_discmethod == "Transit Timing Variations"){
-          order = 2;
-        }
-        if(pl_discmethod == "Microlensing"){
-          order = 3;
-        }
-        if(pl_discmethod == "Imaging"){
-          order = 4;
-        }
-        if(pl_discmethod == "Eclipse Timing Variations"){
-          order = 5;
-        }
-        if(pl_discmethod == "Pulsar Timing"){
-          order = 6;
-        }
-        if(pl_discmethod == "Pulsation Timing Variations"){
-          order = 7;
-        }
-        if(pl_discmethod == "Disk Kinematics"){
-          order = 8;
-        }
-        if(pl_discmethod == "Orbital Brightness Modulation"){
-          order = 9;
-        }
-        if(pl_discmethod == "Astrometry"){
-          order = 10;
-        }
-
+        
         discoveryMethods[pl_discmethod] = {
-          order:order,
           label: pl_discmethod,
           data: [],
           backgroundColor: this.getColor(pl_discmethod,0.4), // Adjusted opacity to 30%
@@ -728,64 +614,6 @@ export default class CustomMatrix extends React.Component {
             const index = ctx.dataIndex;
             const point = ctx.dataset.data[index];
             return point.borderColor || this.getColor(pl_discmethod,0.4); // Default to black if not set
-          },
-          pointBorderWidth: (ctx) => {
-            const index = ctx.dataIndex;
-            const point = ctx.dataset.data[index];
-            return point.borderWidth || 1; // Default to 1 if not set
-          },
-        };
-      }
-      if (!stellarTypes[stellar_type] && selectedType === "stellar_type") {
-
-        let order = 0;
-        if(stellar_type == "Y" || stellar_type ==  "(Y) 80–500 K"){
-          order = 0;
-        }
-        if(stellar_type == "T" || stellar_type ==  "(T) 500–1,500 K"){
-          order = 1
-        }
-        if(stellar_type == "M" || stellar_type ==   "(M) 2,400–3,700 K"){
-          order = 2
-        }
-        if(stellar_type == "K" || stellar_type ==  "(K) 3,700–5,200 K"){
-          order = 3
-        }
-        if(stellar_type == "G" || stellar_type ==   "(G) 5,200–6,000 K"){
-          order = 4
-        }
-        if(stellar_type == "F" || stellar_type ==  "(F) 6,000–7,500 K"){
-          order = 5
-        }
-        if(stellar_type == "A" || stellar_type ==  "(A) 7,500–10,000 K"){
-          order = 6
-        }
-        if(stellar_type == "B" || stellar_type ==  "(B) 10,000–30,000 K"){
-          order = 7
-        }
-        if(stellar_type == "O" || stellar_type ==   "(O) 30,000–50,000 K"){
-          order = 8
-        }
-
-
-        
-        stellarTypes[stellar_type] = {
-          order : order,
-          label: stellar_type,
-          data: [],
-          backgroundColor: this.getColor(stellar_type,0.4), // Adjusted opacity to 30%
-          pointStyle: "circle",
-          pointRadius: 3, // Smaller point radius
-          hoverRadius: 6, // Larger radius on hover
-          hoverBorderWidth: 2,
-          hoverBorderColor: "rgba(0, 0, 0, 0.8)",
-          datalabels: {
-            display: false,
-          },
-          pointBorderColor: (ctx) => {
-            const index = ctx.dataIndex;
-            const point = ctx.dataset.data[index];
-            return point.borderColor || this.getColor(stellar_type,0.4); // Default to black if not set
           },
           pointBorderWidth: (ctx) => {
             const index = ctx.dataIndex;
@@ -817,19 +645,7 @@ export default class CustomMatrix extends React.Component {
           }
         })
       }
-      if(selectedType === "stellar_type"){
-        if(dataFilters[display_name] === undefined || dataFilters[display_name] == false){
-          bc =  this.getColor(stellar_type,0.4);
-        }
-        distances.some((item) => {
-          if(item.name == display_name){
-            stellarTypes[stellar_type].data.push({ x: item.x, y: item.y,name:display_name, borderColor: bc, borderWidth: 1 });
-            return;
-          }
-        })
-      }
     });
-
     // Add planet types datasets to the chart
     Object.values(planetTypes).forEach((dataset) => {
       chartData.datasets.push(dataset);
@@ -838,10 +654,6 @@ export default class CustomMatrix extends React.Component {
     Object.values(discoveryMethods).forEach((dataset) => {
       chartData.datasets.push(dataset);
     });
-    Object.values(stellarTypes).forEach((dataset) => {
-      chartData.datasets.push(dataset);
-    });
-    
     return chartData;
     
   };
@@ -849,34 +661,20 @@ export default class CustomMatrix extends React.Component {
   getColor(type, opacity){
     opacity = opacity.toString()
     const colors = {
-      "Gas Giant": "rgba(152,78,163,"+opacity+")",
-      "Neptune-like": "rgba(0,150,150,"+opacity+")", // Light Blue
-      "Super Earth": "rgba(255,127,0,"+opacity+")", // Yellow
-      "Terrestrial": "rgba(77,175,74,"+opacity+")",
-
-
-      "Transit":"rgba(0,150,150,"+opacity+")",
-      "Radial Velocity":"rgba(55,126,184,"+opacity+")",
-      "Transit Timing Variations":"rgba(77,175,74,"+opacity+")",
-      "Microlensing":"rgba(152,78,163,"+opacity+")",
-      "Imaging":"rgba(255,127,0,"+opacity+")",
-      "Eclipse Timing Variations":"rgba(255,255,51,"+opacity+")",
-      //"Pulsar Timing":"rgba(166,86,40,"+opacity+")",
-      //"Pulsation Timing Variations":"rgba(247,129,191,"+opacity+")",
-      "Disk Kinematics":"rgba(153,213,148,"+opacity+")",
-      "Orbital Brightness Modulation":"rgba(153,153,153,"+opacity+")",
-      "Astrometry":"rgba(204,153,255,"+opacity+")",
-
-      "(Y) 80–500 K":"rgba(255,255,204,"+opacity+")",
-      "(T) 500–1,500 K":"rgba(255,237,160,"+opacity+")",
-      "(M) 2,400–3,700 K":"rgba(254,217,118,"+opacity+")",
-      "(K) 3,700–5,200 K":"rgba(254,178,76,"+opacity+")",
-      "(G) 5,200–6,000 K":"rgba(253,141,60,"+opacity+")",
-      "(F) 6,000–7,500 K":"rgba(252,78,42,"+opacity+")",
-      "(A) 7,500–10,000 K":"rgba(227,26,28,"+opacity+")",
-      "(B) 10,000–30,000 K":"rgba(189,0,38,"+opacity+")",
-      "(O) 30,000–50,000 K":"rgba(128,0,38,"+opacity+")"
-
+      "Gas Giant": "rgba(123,50,148,"+opacity+")",
+      "Neptune-like": "rgba(194,165,207,"+opacity+")", // Light Blue
+      "Super Earth": "rgba(166,219,160,"+opacity+")", // Yellow
+      "Terrestrial": "rgba(0,136,55,"+opacity+")", // Teal
+      "Transit":"rgba(64,0,75,"+opacity+")",
+      "Radial Velocity":"rgba(118,42,131,"+opacity+")",
+      "Transit Timing Variations":"rgba(153,112,171,"+opacity+")",
+      "Microlensing":"rgba(194,165,207,"+opacity+")",
+      "Imaging":"rgba(231,212,232,"+opacity+")",
+      "Eclipse Timing Variations":"rgba(217,240,211,"+opacity+")",
+      "Pulsar Timing":"rgba(166,219,160,"+opacity+")",
+      "Pulsation Timing Variations":"rgba(90,174,97,"+opacity+")",
+      "Disk Kinematics":"rgba(27,120,55,"+opacity+")",
+      "Orbital Brightness Modulation":"rgba(0,68,27,"+opacity+")",
     };
     return colors[type] || "rgba(75, 192, 192, 0.6)";
   };
@@ -917,13 +715,13 @@ export default class CustomMatrix extends React.Component {
       zoom: {
         zoom: {
           wheel: {
-            enabled: this.state.zoom // SET SCROOL ZOOM TO TRUE
+            enabled: true // SET SCROOL ZOOM TO TRUE
           },
           mode: "xy",
           speed: 100
         },
         pan: {
-          enabled: this.state.zoom,
+          enabled: true,
           mode: "xy",
           speed: 100
         }

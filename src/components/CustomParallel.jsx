@@ -188,6 +188,7 @@ export default class CustomParallel extends React.Component{
       label: "      Method",
       type: "categorical",
     };
+    discovery_dim.categories.sort()
     const dimensions = [discovery_method,type_dim,discovery_dim,stellar_type,number_of_planets,mass_dim, dist_dim,own_star,radj_dim ];
 
     const options = {
