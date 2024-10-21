@@ -261,7 +261,7 @@ export default class CustomScatter extends React.Component{
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <div style={{ display: "flex" }}>
             <div className="checkboxes">
-              <label>
+              <label style = {{color:"grey"}}>
                 <input
                   type="checkbox"
                   name="massDisplayFlag"
@@ -272,7 +272,7 @@ export default class CustomScatter extends React.Component{
               </label>
             </div>
             <div className="checkboxes">
-              <label>
+              <label style = {{color:"grey"}}>
                 <input
                   type="checkbox"
                   name="stDistanceFlag"
@@ -283,7 +283,7 @@ export default class CustomScatter extends React.Component{
               </label>
             </div>
             <div className="checkboxes">
-              <label>
+              <label style = {{color:"grey"}}>
                 <input
                   type="checkbox"
                   name="plRadjFlag"
@@ -294,7 +294,7 @@ export default class CustomScatter extends React.Component{
               </label>
             </div>
             <div className="checkboxes">
-              <label>
+              <label style = {{color:"grey"}}>
                 <input
                   type="checkbox"
                   name="planetTypeFlag"
@@ -305,7 +305,7 @@ export default class CustomScatter extends React.Component{
               </label>
             </div>
             <div className="checkboxes">
-              <label>
+              <label style = {{color:"grey"}}>
                 <input
                   type="checkbox"
                   name="planetTypeFlag"
@@ -327,7 +327,7 @@ export default class CustomScatter extends React.Component{
         </div>
          <div style={{ display: "flex" }}>
           <div className="checkboxes">
-            <label>
+            <label style = {{color:"grey"}}>
               Learning Rate:
               <input
                 type="number"
@@ -337,7 +337,7 @@ export default class CustomScatter extends React.Component{
             </label>
           </div>
           <div className="checkboxes">
-            <label>
+            <label style = {{color:"grey"}}>
               Maximum Steps:
               <input
                 type="number"

@@ -49,6 +49,7 @@ const styles = {
     padding: "10px", // Optional padding around the charts
     border: "1px solid #ccc", // Add border to each container
     boxSizing: "border-box", // Include padding and border in the element's width and height
+    backgroundColor:"black"
   },
   loader: {
     position: "fixed",
