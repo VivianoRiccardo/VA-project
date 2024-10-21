@@ -477,7 +477,7 @@ export class CustomBubble extends React.Component {
           className='scroll-date'
           style={{
             left: `${point}px`,
-            color: index == this.state.scrollPosition ? 'red' : 'black', // Highlight current scroll point
+            color: index == this.state.scrollPosition ? 'red' : 'grey', // Highlight current scroll point
           }}
           onClick={ () => {this.onPointClick(point)}}
         >{this.state.dates[index]}</div>

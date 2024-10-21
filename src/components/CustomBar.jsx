@@ -507,6 +507,10 @@ export class CustomBar extends React.Component{
             },
           },
         },
+        datalabels: {
+          display: true, // Make sure to display data labels (the numbers)
+          color: 'white', // Set the font color to light grey for data values
+        },
         zoom: {
           zoom: {
             wheel: {

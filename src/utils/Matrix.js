@@ -930,9 +930,18 @@ export default class CustomMatrix extends React.Component {
       },
       tooltip: {
         callbacks: {
-         label: (yDatapoint) => {return (yDatapoint.raw)},
-        }
-      }
+          label: function (tooltipItem) {
+            const x = tooltipItem.raw.x; // Access the x value
+            const y = tooltipItem.raw.y; // Access the y value
+      
+            // Optionally, get the dataset label to include in the tooltip
+            const datasetLabel = tooltipItem.dataset.label || '';
+      
+            // Return the formatted tooltip
+            return `${datasetLabel}`;
+          },
+        },
+      },
     },
     onClick: (event, elements) => {
       const chart = event.chart;
