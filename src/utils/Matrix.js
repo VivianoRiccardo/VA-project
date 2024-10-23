@@ -132,7 +132,7 @@ export function getMatrixElements(dataset, type = "planet_type") {
       star_mass[index]
     ]);
   });
-  discovery_date.sort()
+  //discovery_date.sort()
   const returnData = {
     names: names,
     discovery_date: discovery_date,
@@ -637,6 +637,8 @@ export default class CustomMatrix extends React.Component {
       }
       // Prepare the data for planet_type legend
       let bc =  'rgba(255, 0, 0, 1)';
+      let z = 10;
+      let borderWidth=2;
       if (!planetTypes[planet_type] && selectedType === "planet_type") {
         let order = 0;
         if(planet_type == "Neptune-like"){
@@ -798,10 +800,13 @@ export default class CustomMatrix extends React.Component {
       if(selectedType === "planet_type"){
         if(dataFilters[display_name] === undefined || dataFilters[display_name] == false){
           bc =  this.getColor(planet_type,0.4);
+          z = 1;
+          borderWidth = 1;
         }
+        console.log(z);
           distances.some((item) => {
             if(item.name == display_name){
-              planetTypes[planet_type].data.push({ x: item.x, y: item.y,name:display_name, borderColor: bc, borderWidth: 1 });
+              planetTypes[planet_type].data.push({ x: item.x, y: item.y,name:display_name, borderColor: bc, borderWidth: borderWidth, z:z });
               return;
             }
           })
@@ -809,10 +814,12 @@ export default class CustomMatrix extends React.Component {
       if(selectedType === "pl_discmethod"){
         if(dataFilters[display_name] === undefined || dataFilters[display_name] == false){
           bc =  this.getColor(pl_discmethod,0.4);
+          z = 1;
+          borderWidth=1;
         }
         distances.some((item) => {
           if(item.name == display_name){
-            discoveryMethods[pl_discmethod].data.push({ x: item.x, y: item.y,name:display_name, borderColor: bc, borderWidth: 1 });
+            discoveryMethods[pl_discmethod].data.push({ x: item.x, y: item.y,name:display_name, borderColor: bc, borderWidth: 1, z:z });
             return;
           }
         })
@@ -820,25 +827,30 @@ export default class CustomMatrix extends React.Component {
       if(selectedType === "stellar_type"){
         if(dataFilters[display_name] === undefined || dataFilters[display_name] == false){
           bc =  this.getColor(stellar_type,0.4);
+          z = 1;
+          borderWidth = 1;
         }
         distances.some((item) => {
           if(item.name == display_name){
-            stellarTypes[stellar_type].data.push({ x: item.x, y: item.y,name:display_name, borderColor: bc, borderWidth: 1 });
+            stellarTypes[stellar_type].data.push({ x: item.x, y: item.y,name:display_name, borderColor: bc, borderWidth: borderWidth , z:z});
             return;
           }
         })
       }
     });
-
+    
     // Add planet types datasets to the chart
     Object.values(planetTypes).forEach((dataset) => {
+      dataset.data.sort((a, b) => a.z - b.z);
       chartData.datasets.push(dataset);
     });
     // Add discovery methods datasets to the chart
     Object.values(discoveryMethods).forEach((dataset) => {
+      dataset.data.sort((a, b) => a.z - b.z);
       chartData.datasets.push(dataset);
     });
     Object.values(stellarTypes).forEach((dataset) => {
+      dataset.data.sort((a, b) => a.z - b.z);
       chartData.datasets.push(dataset);
     });
     

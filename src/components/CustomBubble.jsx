@@ -227,7 +227,10 @@ export class CustomBubble extends React.Component {
 
   getDataset(){
           const customLabels = []
-
+          let maximum_x = -9999999
+          let minimum_x = 999999999
+          let maximum_y = -9999999
+          let minimum_y = 999999999
 
           // SET THE DATASET OF THE DATE EACH DATASET FOR EACH PLANET TYPE   
           let data_tot = []
@@ -252,35 +255,66 @@ export class CustomBubble extends React.Component {
 
             }
             let count = 0;
+            for(let j = 0; j < this.state.dates.length; j++){
+              for(let i = 0; i < this.state.sorted_data[j].length; i++){
+
+                if (this.state.sorted_data[j][i][this.state.xAxis] > maximum_x)
+                  maximum_x = this.state.sorted_data[j][i][this.state.xAxis]
+                if (this.state.sorted_data[j][i][this.state.xAxis] < minimum_x)
+                  minimum_x = this.state.sorted_data[j][i][this.state.xAxis]
+                
+                if (this.state.sorted_data[j][i][this.state.yAxis] > maximum_y)
+                  maximum_y = this.state.sorted_data[j][i][this.state.yAxis]
+                if (this.state.sorted_data[j][i][this.state.yAxis] < minimum_y)
+                  minimum_y = this.state.sorted_data[j][i][this.state.yAxis]
+                if(this.state.sorted_data[j][i][this.state.xAxis] > 6.89){
+                  console.log(this.state.sorted_data[j][i][this.state.xAxis])
+                  console.log(j)
+                }
+              }
+
+              
+  
+            }
+
             for(let i = 0; i < this.state.sorted_data[this.state.dates.indexOf(this.state.date)].length; i++){
               if( this.state.sorted_data[this.state.dates.indexOf(this.state.date)][i][this.state.selectedType] == this.state.labels[j]){
                 
+
                 customLabels.push(this.state.sorted_data[this.state.dates.indexOf(this.state.date)][i]['display_name'])
                 if(this.state.dataFilters[this.state.sorted_data[this.state.dates.indexOf(this.state.date)][i]["display_name"]]){
+
+                  if(this.state.sorted_data[this.state.dates.indexOf(this.state.date)][i][this.state.xAxis] > 6.89){
+                    console.log(this.state.dates[j])
+                  }
+
+
                   data1.push({borderColor: 'red',    // Red border for this point
                     borderWidth: 1, 
                     name: this.state.sorted_data[this.state.dates.indexOf(this.state.date)][i]["display_name"],
                      x: this.state.sorted_data[this.state.dates.indexOf(this.state.date)][i][this.state.xAxis],
                      y: this.state.sorted_data[this.state.dates.indexOf(this.state.date)][i][this.state.yAxis],
-                     r: l_radius[count]})
+                     r: l_radius[count], 
+                     z:10})
                 }
                 else{
                   data1.push({ borderWidth: 0, borderColor: 'red',    // Red border for this point
                     name: this.state.sorted_data[this.state.dates.indexOf(this.state.date)][i]["display_name"],
                      x: this.state.sorted_data[this.state.dates.indexOf(this.state.date)][i][this.state.xAxis],
                      y: this.state.sorted_data[this.state.dates.indexOf(this.state.date)][i][this.state.yAxis],
-                     r: l_radius[count]})
+                     r: l_radius[count], 
+                    z:1})
                 }
                 count++;
               }
             }
-            
+            data1.sort((a, b) => a.z - b.z);
             let dict = {label:this.state.labels[j],backgroundColor: this.state.colors[j],datalabels: {
               display: false // This disables displaying values near data points
             },data : data1};
             data_tot.push(dict);
           }
-          return [customLabels,data_tot]
+          return [customLabels,data_tot, maximum_x+maximum_x*0.1, minimum_x, maximum_y+maximum_y*0.1, minimum_y]
   }
 
   handleSelectChange(select, value){
@@ -490,7 +524,7 @@ export class CustomBubble extends React.Component {
   getCircles(){
 
     let text_style = {
-      color : 'rgba(0,0,0,1)',
+      color : 'grey',
       font : 'Arial',
       fontSize:'80%',
       paddingLeft:'20%;'
@@ -515,7 +549,7 @@ export class CustomBubble extends React.Component {
       </div>
       <div style={text_style}>
       {"≤ "} 
-        <input id = "0" style={{textAlign: "center",width:"80%",background:"transparent",border: "none", outline: "none"}} onChange={this.handleInputChange} placeholder={this.state.sizes[0]} value={this.state.sizes[0]} ></input>
+        <input id = "0" style={{textAlign: "center",width:"80%",background:"transparent",border: "none", outline: "none", color:"grey"}} onChange={this.handleInputChange} placeholder={this.state.sizes[0]} value={this.state.sizes[0]} ></input>
       </div>
       {/*<div style={text_style}>
         {this.state.axis_names[this.state.radius]}
@@ -532,7 +566,7 @@ export class CustomBubble extends React.Component {
       </div>
       <div style={text_style}>
       {"≤ "} 
-        <input id = "1" style={{textAlign: "center",width:"80%",background:"transparent",border: "none", outline: "none"}} onChange={this.handleInputChange} placeholder={this.state.sizes[1]} value={this.state.sizes[1]}></input>
+        <input id = "1" style={{textAlign: "center",width:"80%",background:"transparent",border: "none", outline: "none", color:"grey"}} onChange={this.handleInputChange} placeholder={this.state.sizes[1]} value={this.state.sizes[1]}></input>
       </div>
       {/*<div style={text_style}>
         {this.state.axis_names[this.state.radius]}
@@ -548,7 +582,7 @@ export class CustomBubble extends React.Component {
       </div>
       <div style={text_style}>
         {"≤ "} 
-        <input id = "2" style={{textAlign: "center", width:"80%",background:"transparent",border: "none", outline: "none"}} onChange={this.handleInputChange} placeholder={this.state.sizes[2]} value={this.state.sizes[2]}></input>
+        <input id = "2" style={{textAlign: "center", width:"80%",background:"transparent",border: "none", outline: "none", color:"grey"}} onChange={this.handleInputChange} placeholder={this.state.sizes[2]} value={this.state.sizes[2]}></input>
       </div>
       {/*<div style={text_style}>
         {this.state.axis_names[this.state.radius]}
@@ -561,7 +595,7 @@ export class CustomBubble extends React.Component {
                         }
                     }>
       </div>
-      <span>{">"}</span>
+      <span style={text_style}>{">"}</span>
       <span style={text_style}>
         {this.state.sizes[2]}
       </span>
@@ -750,6 +784,7 @@ export class CustomBubble extends React.Component {
             display: true,
             text: this.state.axis_names[this.state.xAxis],
           },
+          max:data_tot[2]
         },
         y: {
           title: {
@@ -757,6 +792,7 @@ export class CustomBubble extends React.Component {
             text: this.state.axis_names[this.state.yAxis],
           },
           beginAtZero: true, // Ensure Y-axis starts at 0
+          max:data_tot[4]
         },
       },
     };
