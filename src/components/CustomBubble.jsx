@@ -15,8 +15,7 @@ export class CustomBubble extends React.Component {
       super(props);
       
       let l = this.turnDataToMenagableData(props.data);
-
-
+      
 
       this.state = {
         dataFilters:props.dataFilters,
@@ -30,20 +29,20 @@ export class CustomBubble extends React.Component {
         axis_names: {'pl_massj': "MASS (J)", "pl_radj": "RADIUS (J)", "st_dist":"EARTH DISTANCE (Parsec)", 'number_of_planets':'N. PLANETS-SOLAR SYSTEM',"ua": "STAR DISTANCE (UA)"},
         reverse_axis_names: {"MASS (J)":'pl_massj', "RADIUS (J)":"pl_radj", "EARTH DISTANCE (Parsec)":"st_dist", 'N. PLANETS-SOLAR SYSTEM':'number_of_planets', "STAR DISTANCE (UA)":"ua"},
         different_planets : l[1].length,
-        colors : ["rgba(152,78,163,0.7)","rgba(0,150,150,0.7)", "rgba(255,127,0,0.7)", "rgba(77,175,74,0.7)", 'rgba(0,128,0,0.5)'],
+        colors : ["rgba(152,78,163,0.2)","rgba(0,150,150,0.2)", "rgba(255,127,0,0.2)", "rgba(77,175,74,0.2)", 'rgba(0,128,0,0.5)'],
         labels : l[1],
         temp_planet_type_labels:l[1],
         temp_disc_method_labels:l[3],
         temp_stellar_type_labels:l[4],
-        temp_planet_type_colors:["rgba(152,78,163,0.7)","rgba(0,150,150,0.7)", "rgba(255,127,0,0.7)", "rgba(77,175,74,0.7)", 'rgba(0,128,0,0.5)'],
+        temp_planet_type_colors:["rgba(152,78,163,0.2)","rgba(0,150,150,0.2)", "rgba(255,127,0,0.2)", "rgba(77,175,74,0.2)", 'rgba(0,128,0,0.5)'],
 
 
-        temp_disc_method_colors:["rgba(0,150,150,0.7)","rgba(55,126,184,0.7)","rgba(77,175,74,0.7)","rgba(152,78,163,0.7)","rgba(255,127,0,0.7)",
-                                "rgba(255,255,51,0.7)","rgba(153,213,148,0.7)","rgba(153,153,153,0.7)","rgba(204,153,255,0.7)"],
+        temp_disc_method_colors:["rgba(0,150,150,0.2)","rgba(55,126,184,0.2)","rgba(77,175,74,0.2)","rgba(152,78,163,0.2)","rgba(255,127,0,0.2)",
+                                "rgba(255,255,51,0.2)","rgba(153,213,148,0.2)","rgba(153,153,153,0.2)","rgba(204,153,255,0.2)"],
 
 
-        temp_stellar_type_colors:["rgba(255,255,204,0.7)","rgba(255,237,160,0.7)","rgba(254,217,118,0.7)","rgba(254,178,76,0.7)","rgba(253,141,60,0.7)",
-                                  "rgba(252,78,42,0.7)","rgba(227,26,28,0.7)","rgba(189,0,38,0.7)","rgba(128,0,38,0.7)"],
+        temp_stellar_type_colors:["rgba(255,255,204,0.2)","rgba(255,237,160,0.2)","rgba(254,217,118,0.2)","rgba(254,178,76,0.2)","rgba(253,141,60,0.2)",
+                                  "rgba(252,78,42,0.2)","rgba(227,26,28,0.2)","rgba(189,0,38,0.2)","rgba(128,0,38,0.2)"],
         date:2011,
         selectedType:"planet_type",
         dates : l[2],
@@ -152,7 +151,7 @@ export class CustomBubble extends React.Component {
     }
     stateDate.sort();
     let data = [];
-    for(let i = 0; i < stateDate.length; i++){
+    for(let i = 0; i < stateDate.length+1; i++){
       data.push([])
     }
     for(let i = 0; i < keys.length; i++){
@@ -189,10 +188,13 @@ export class CustomBubble extends React.Component {
       }
       m['stellar_type'] = stellar_type
       data[index].push(m);
+      data[stateDate.length].push(m);
       
 
 
     }
+
+    stateDate.push("'11-'24")
 
 
     let priorityOrder1 = ["Gas Giant", "Neptune-like", "Super Earth", "Terrestrial"];
@@ -267,10 +269,6 @@ export class CustomBubble extends React.Component {
                   maximum_y = this.state.sorted_data[j][i][this.state.yAxis]
                 if (this.state.sorted_data[j][i][this.state.yAxis] < minimum_y)
                   minimum_y = this.state.sorted_data[j][i][this.state.yAxis]
-                if(this.state.sorted_data[j][i][this.state.xAxis] > 6.89){
-                  console.log(this.state.sorted_data[j][i][this.state.xAxis])
-                  console.log(j)
-                }
               }
 
               
@@ -283,13 +281,7 @@ export class CustomBubble extends React.Component {
 
                 customLabels.push(this.state.sorted_data[this.state.dates.indexOf(this.state.date)][i]['display_name'])
                 if(this.state.dataFilters[this.state.sorted_data[this.state.dates.indexOf(this.state.date)][i]["display_name"]]){
-
-                  if(this.state.sorted_data[this.state.dates.indexOf(this.state.date)][i][this.state.xAxis] > 6.89){
-                    console.log(this.state.dates[j])
-                  }
-
-
-                  data1.push({borderColor: 'red',    // Red border for this point
+                    data1.push({borderColor: 'red',    // Red border for this point
                     borderWidth: 1, 
                     name: this.state.sorted_data[this.state.dates.indexOf(this.state.date)][i]["display_name"],
                      x: this.state.sorted_data[this.state.dates.indexOf(this.state.date)][i][this.state.xAxis],
@@ -704,9 +696,9 @@ export class CustomBubble extends React.Component {
         const height = chart.height;
   
         // Draw the background text
-        ctx.fillStyle = 'rgba(255,255,255,0.5)';
+        ctx.fillStyle = 'rgba(255,255,255,0.1)';
         ctx.textAlign = 'center';
-        ctx.font = '200px Arial';
+        ctx.font = '130px Arial';
         ctx.fillText(this.state.date, width / 2, height / 2);
   
         // Draw the selection rectangle (if any)
