@@ -395,7 +395,7 @@ export class CustomBubble extends React.Component {
 
     return(<><div style={{ display: "flex", justifyContent: "space-between" }} ><center className="circle-container">
       <div>
-        <label>X</label>
+        <label style={{'color':'grey'}}>X</label>
         <select
           value={this.state.select1Value}
           onChange={(e) =>
@@ -410,7 +410,7 @@ export class CustomBubble extends React.Component {
         </select>
       </div>
       <div>
-        <label>Y</label>
+        <label style={{'color':'grey'}}>Y</label>
         <select
           value={this.state.select2Value}
           onChange={(e) =>
