@@ -426,7 +426,7 @@ export class CustomBubble extends React.Component {
         </select>
       </div>
       <div>
-        <label>Size</label>
+        <label style={{'color':'grey'}}>Size</label>
         <select
           value={this.state.select3Value}
           onChange={(e) =>
