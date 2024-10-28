@@ -768,6 +768,29 @@ export class CustomBubble extends React.Component {
       })),
     };
 
+    let scales = {
+        x: {
+          title: {
+            display: true,
+            text: this.state.axis_names[this.state.xAxis],
+          },
+          //max:data_tot[2]
+        },
+        y: {
+          title: {
+            display: true,
+            text: this.state.axis_names[this.state.yAxis],
+          },
+          beginAtZero: true, // Ensure Y-axis starts at 0
+          //max:data_tot[4]
+        },
+      }
+
+    if (this.state.minmax){
+      scales.x['max'] = data_tot[2];
+      scales.y['max'] = data_tot[4];
+    }
+
   
     // OPTIONS
     const options = {
@@ -793,23 +816,7 @@ export class CustomBubble extends React.Component {
           }
         },
       },
-      scales: {
-        x: {
-          title: {
-            display: true,
-            text: this.state.axis_names[this.state.xAxis],
-          },
-          max:data_tot[2]
-        },
-        y: {
-          title: {
-            display: true,
-            text: this.state.axis_names[this.state.yAxis],
-          },
-          beginAtZero: true, // Ensure Y-axis starts at 0
-          max:data_tot[4]
-        },
-      },
+      scales: scales
     };
   
     return (
