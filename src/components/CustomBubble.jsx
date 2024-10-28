@@ -458,7 +458,6 @@ export class CustomBubble extends React.Component {
             </select>
           </div>
     </div>
-    <div>
     <div style={{ display: "flex", justifyContent: "space-between" }} ><center className="circle-container">
       <div>
          <button onClick={this.handleZoom}>{this.state.zoom?"Disable zoom":"Enable zoom"}</button>
@@ -474,6 +473,7 @@ export class CustomBubble extends React.Component {
                 Global Min-Max
               </label>
             </div>
+      </center>
       
    
   </div></>)
