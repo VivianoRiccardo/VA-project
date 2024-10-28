@@ -18,6 +18,7 @@ export class CustomBubble extends React.Component {
       
 
       this.state = {
+        minmax:true,
         dataFilters:props.dataFilters,
         data : props.data,
         parentCallback:props.callback,
@@ -74,12 +75,18 @@ export class CustomBubble extends React.Component {
       this.handleSelectLabelChange = this.handleSelectLabelChange.bind(this);
       this.handleZoom = this.handleZoom.bind(this);
       this.sortWithPriority = this.sortWithPriority.bind(this);
+      this.handleDisplayFlagChange=this.handleDisplayFlagChange.bind(this);
 
     }
 
   handleZoom(){
     let zoom = this.state.zoom;
     this.setState({zoom:!zoom})
+  }
+
+  handleDisplayFlagChange(){
+    let minmax = this.state.minmax;
+    this.setState({minmax:!minmax})
   }
 
   // Custom comparator function
@@ -452,7 +459,23 @@ export class CustomBubble extends React.Component {
           </div>
     </div>
     <div>
-    <button onClick={this.handleZoom}>{this.state.zoom?"Disable zoom":"Enable zoom"}</button>
+    <div style={{ display: "flex", justifyContent: "space-between" }} ><center className="circle-container">
+      <div>
+         <button onClick={this.handleZoom}>{this.state.zoom?"Disable zoom":"Enable zoom"}</button>
+      </div>
+       <div className="checkboxes">
+              <label style = {{color:"grey"}}>
+                <input
+                  type="checkbox"
+                  name="minmax"
+                  checked={this.state.minmax}
+                  onChange={() => this.handleDisplayFlagChange()}
+                />
+                Global Min-Max
+              </label>
+            </div>
+      
+   
   </div></>)
   }
 
