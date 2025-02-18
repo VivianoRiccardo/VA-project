@@ -345,8 +345,8 @@ export class CustomBar extends React.Component{
   getInputAxis(){
     return(<div style={{ display: "flex", justifyContent: "space-between" }} ><center className="circle-container">
       <div>
-        <label style={{'color':'grey'}}>X</label>
-        <select
+        <label style={{'color':'white', font: "normal 18px sans-serif"}}>X</label>
+        <select style={{font: "normal 18px sans-serif"}}
           value={this.state.select1Value}
           onChange={(e) =>
             this.handleSelectChange('select1', e.target.value)
@@ -360,8 +360,8 @@ export class CustomBar extends React.Component{
         </select>
       </div>
       <div>
-        <label style={{'color':'grey'}}>Y</label>
-        <select
+        <label style={{'color':'white', font: "normal 18px sans-serif"}}>Y</label>
+        <select style={{font: "normal 18px sans-serif"}}
           value={this.state.select2Value}
           onChange={(e) =>
             this.handleSelectChange('select2', e.target.value)
@@ -376,11 +376,11 @@ export class CustomBar extends React.Component{
       </div>
 
       <div>
-        <button onClick={this.handleZoom}>{this.state.zoom?"Disable zoom":"Enable zoom"}</button>
+        <button onClick={this.handleZoom} style={{font: "normal 18px sans-serif"}}>{this.state.zoom?"Disable zoom":"Enable zoom"}</button>
       </div>
     </center>
           <div>
-            <select onChange={this.handleSelectLabelChange} value={this.state.selectedType}>
+            <select onChange={this.handleSelectLabelChange} value={this.state.selectedType} style={{font: "normal 18px sans-serif"}}>
               <option value={"planet_type"}>Planet Type</option>
               <option value={"pl_discmethod"}>Planet Discmethod</option>
               <option value={"stellar_type"}>Star Type</option>
@@ -498,6 +498,12 @@ export class CustomBar extends React.Component{
             display: true,  // Display the legend
             labels: {
               usePointStyle: true,  // Use the point style (circle) for legend markers
+              font: {
+                size: 18,  // Set the font size for the legend
+                family: 'sans-serif', // Optional: Set font family if desired
+                weight: 'normal',  // Optional: Set font weight
+              },
+              color: 'rgba(255, 255, 255, 1)', // Set the color to white
             },
           },
         tooltip: {
@@ -531,15 +537,43 @@ export class CustomBar extends React.Component{
           stacked: true,
           title: {
             display: true,
-            text: this.state.select1Value
-          }
+            text: this.state.select1Value,
+            font: {
+              size: 18, // Set title font size
+              family: 'sans-serif', // Set font family for title
+              weight: 'normal', // Set title font weight
+            },
+            color: 'rgba(255, 255, 255, 1)'
+          },
+          ticks: {
+            color: 'rgba(255, 255, 255, 1)', // Set ticks (axis labels) color to white
+            font: {
+              size: 18, // Set ticks font size
+              family: 'sans-serif', // Set font family for ticks
+              weight: 'normal', // Set ticks font weight
+            },
+          },
         },
         y: {
           stacked: true,
           title: {
             display: true,
-            text: this.state.select2Value
-          }
+            text: this.state.select2Value,
+            font: {
+              size: 18, // Set title font size
+              family: 'sans-serif', // Set font family for title
+              weight: 'normal', // Set title font weight
+            },
+            color: 'rgba(255, 255, 255, 1)'
+          },
+          ticks: {
+            color: 'rgba(255, 255, 255, 1)', // Set ticks (axis labels) color to white
+            font: {
+              size: 18, // Set ticks font size
+              family: 'sans-serif', // Set font family for ticks
+              weight: 'normal', // Set ticks font weight
+            },
+          },
         },
       },
     };

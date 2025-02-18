@@ -30,20 +30,20 @@ export class CustomBubble extends React.Component {
         axis_names: {'pl_massj': "MASS (J)", "pl_radj": "RADIUS (J)", "st_dist":"EARTH DISTANCE (Parsec)", 'number_of_planets':'N. PLANETS-SOLAR SYSTEM',"ua": "STAR DISTANCE (UA)"},
         reverse_axis_names: {"MASS (J)":'pl_massj', "RADIUS (J)":"pl_radj", "EARTH DISTANCE (Parsec)":"st_dist", 'N. PLANETS-SOLAR SYSTEM':'number_of_planets', "STAR DISTANCE (UA)":"ua"},
         different_planets : l[1].length,
-        colors : ["rgba(152,78,163,0.2)","rgba(0,150,150,0.2)", "rgba(255,127,0,0.2)", "rgba(77,175,74,0.2)", 'rgba(0,128,0,0.5)'],
+        colors : ["rgba(152,78,163,0.8)","rgba(0,150,150,0.8)", "rgba(255,127,0,0.8)", "rgba(77,175,74,0.8)", 'rgba(0,128,0,0.5)'],
         labels : l[1],
         temp_planet_type_labels:l[1],
         temp_disc_method_labels:l[3],
         temp_stellar_type_labels:l[4],
-        temp_planet_type_colors:["rgba(152,78,163,0.2)","rgba(0,150,150,0.2)", "rgba(255,127,0,0.2)", "rgba(77,175,74,0.2)", 'rgba(0,128,0,0.5)'],
+        temp_planet_type_colors:["rgba(152,78,163,0.8)","rgba(0,150,150,0.8)", "rgba(255,127,0,0.8)", "rgba(77,175,74,0.8)", 'rgba(0,128,0,0.5)'],
 
 
-        temp_disc_method_colors:["rgba(0,150,150,0.2)","rgba(55,126,184,0.2)","rgba(77,175,74,0.2)","rgba(152,78,163,0.2)","rgba(255,127,0,0.2)",
-                                "rgba(255,255,51,0.2)","rgba(153,213,148,0.2)","rgba(153,153,153,0.2)","rgba(204,153,255,0.2)"],
+        temp_disc_method_colors:["rgba(0,150,150,0.8)","rgba(55,126,184,0.8)","rgba(77,175,74,0.8)","rgba(152,78,163,0.8)","rgba(255,127,0,0.8)",
+                                "rgba(255,255,51,0.8)","rgba(153,213,148,0.8)","rgba(153,153,153,0.8)","rgba(204,153,255,0.8)"],
 
 
-        temp_stellar_type_colors:["rgba(255,255,204,0.2)","rgba(255,237,160,0.2)","rgba(254,217,118,0.2)","rgba(254,178,76,0.2)","rgba(253,141,60,0.2)",
-                                  "rgba(252,78,42,0.2)","rgba(227,26,28,0.2)","rgba(189,0,38,0.2)","rgba(128,0,38,0.2)"],
+        temp_stellar_type_colors:["rgba(255,255,204,0.8)","rgba(255,237,160,0.8)","rgba(254,217,118,0.8)","rgba(254,178,76,0.8)","rgba(253,141,60,0.8)",
+                                  "rgba(252,78,42,0.8)","rgba(227,26,28,0.8)","rgba(189,0,38,0.8)","rgba(128,0,38,0.8)"],
         date:2011,
         selectedType:"planet_type",
         dates : l[2],
@@ -402,8 +402,8 @@ export class CustomBubble extends React.Component {
 
     return(<><div style={{ display: "flex", justifyContent: "space-between" }} ><center className="circle-container">
       <div>
-        <label style={{'color':'grey'}}>X</label>
-        <select
+        <label style={{'color':'white', font: "normal 18px sans-serif"}}>X</label>
+        <select style={{font: "normal 18px sans-serif"}}
           value={this.state.select1Value}
           onChange={(e) =>
             this.handleSelectChange('select1', e.target.value)
@@ -417,8 +417,8 @@ export class CustomBubble extends React.Component {
         </select>
       </div>
       <div>
-        <label style={{'color':'grey'}}>Y</label>
-        <select
+        <label style={{'color':'white', font: "normal 18px sans-serif"}}>Y</label>
+        <select style={{font: "normal 18px sans-serif"}}
           value={this.state.select2Value}
           onChange={(e) =>
             this.handleSelectChange('select2', e.target.value)
@@ -433,8 +433,8 @@ export class CustomBubble extends React.Component {
         </select>
       </div>
       <div>
-        <label style={{'color':'grey'}}>Size</label>
-        <select
+        <label style={{'color':'white', font: "normal 18px sans-serif"}}>Size</label>
+        <select style={{font: "normal 18px sans-serif"}}
           value={this.state.select3Value}
           onChange={(e) =>
             this.handleSelectChange('select3', e.target.value)
@@ -451,7 +451,7 @@ export class CustomBubble extends React.Component {
       
     </center>
           <div>
-            <select onChange={this.handleSelectLabelChange} value={this.state.selectedType}>
+            <select onChange={this.handleSelectLabelChange} value={this.state.selectedType} style={{font: "normal 18px sans-serif"}}>
               <option value={"planet_type"}>Planet Type</option>
               <option value={"pl_discmethod"}>Planet Discmethod</option>
               <option value={"stellar_type"}>Star Type</option>
@@ -460,10 +460,10 @@ export class CustomBubble extends React.Component {
     </div>
     <div style={{ display: "flex", justifyContent: "space-between" }} ><center className="circle-container">
       <div>
-         <button onClick={this.handleZoom}>{this.state.zoom?"Disable zoom":"Enable zoom"}</button>
+         <button onClick={this.handleZoom} style={{font: "normal 18px sans-serif"}}>{this.state.zoom?"Disable zoom":"Enable zoom"}</button>
       </div>
        <div className="checkboxes">
-              <label style = {{color:"grey"}}>
+              <label style = {{color:"white", font: "normal 18px sans-serif"}}>
                 <input
                   type="checkbox"
                   name="minmax"
@@ -526,7 +526,8 @@ export class CustomBubble extends React.Component {
           className='scroll-date'
           style={{
             left: `${point}px`,
-            color: index == this.state.scrollPosition ? 'red' : 'grey', // Highlight current scroll point
+            color: index == this.state.scrollPosition ? 'red' : 'white',
+            font: "normal 18px sans-serif" // Highlight current scroll point
           }}
           onClick={ () => {this.onPointClick(point)}}
         >{this.state.dates[index]}</div>
@@ -539,8 +540,8 @@ export class CustomBubble extends React.Component {
   getCircles(){
 
     let text_style = {
-      color : 'grey',
-      font : 'Arial',
+      color : 'white',
+      font : 'sans-serif',
       fontSize:'80%',
       paddingLeft:'20%;'
     }
@@ -564,7 +565,7 @@ export class CustomBubble extends React.Component {
       </div>
       <div style={text_style}>
       {"≤ "} 
-        <input id = "0" style={{textAlign: "center",width:"80%",background:"transparent",border: "none", outline: "none", color:"grey"}} onChange={this.handleInputChange} placeholder={this.state.sizes[0]} value={this.state.sizes[0]} ></input>
+        <input id = "0" style={{textAlign: "center",width:"80%",background:"transparent",border: "none", outline: "none", color:"white"}} onChange={this.handleInputChange} placeholder={this.state.sizes[0]} value={this.state.sizes[0]} ></input>
       </div>
       {/*<div style={text_style}>
         {this.state.axis_names[this.state.radius]}
@@ -581,7 +582,7 @@ export class CustomBubble extends React.Component {
       </div>
       <div style={text_style}>
       {"≤ "} 
-        <input id = "1" style={{textAlign: "center",width:"80%",background:"transparent",border: "none", outline: "none", color:"grey"}} onChange={this.handleInputChange} placeholder={this.state.sizes[1]} value={this.state.sizes[1]}></input>
+        <input id = "1" style={{textAlign: "center",width:"80%",background:"transparent",border: "none", outline: "none", color:"white"}} onChange={this.handleInputChange} placeholder={this.state.sizes[1]} value={this.state.sizes[1]}></input>
       </div>
       {/*<div style={text_style}>
         {this.state.axis_names[this.state.radius]}
@@ -597,7 +598,7 @@ export class CustomBubble extends React.Component {
       </div>
       <div style={text_style}>
         {"≤ "} 
-        <input id = "2" style={{textAlign: "center", width:"80%",background:"transparent",border: "none", outline: "none", color:"grey"}} onChange={this.handleInputChange} placeholder={this.state.sizes[2]} value={this.state.sizes[2]}></input>
+        <input id = "2" style={{textAlign: "center", width:"80%",background:"transparent",border: "none", outline: "none", color:"white"}} onChange={this.handleInputChange} placeholder={this.state.sizes[2]} value={this.state.sizes[2]}></input>
       </div>
       {/*<div style={text_style}>
         {this.state.axis_names[this.state.radius]}
@@ -719,7 +720,7 @@ export class CustomBubble extends React.Component {
         const height = chart.height;
   
         // Draw the background text
-        ctx.fillStyle = 'rgba(255,255,255,0.1)';
+        ctx.fillStyle = 'rgba(79, 79, 79, 0.81)';
         ctx.textAlign = 'center';
         ctx.font = '130px Arial';
         ctx.fillText(this.state.date, width / 2, height / 2);
@@ -773,6 +774,20 @@ export class CustomBubble extends React.Component {
           title: {
             display: true,
             text: this.state.axis_names[this.state.xAxis],
+            font: {
+              size: 18, // Set title font size
+              family: 'sans-serif', // Set font family for title
+              weight: 'normal', // Set title font weight
+            },
+            color: 'rgba(255, 255, 255, 1)'
+          },
+          ticks: {
+            color: 'rgba(255, 255, 255, 1)', // Set ticks (axis labels) color to white
+            font: {
+              size: 18, // Set ticks font size
+              family: 'sans-serif', // Set font family for ticks
+              weight: 'normal', // Set ticks font weight
+            },
           },
           //max:data_tot[2]
         },
@@ -780,9 +795,23 @@ export class CustomBubble extends React.Component {
           title: {
             display: true,
             text: this.state.axis_names[this.state.yAxis],
+            font: {
+              size: 18, // Set title font size
+              family: 'sans-serif', // Set font family for title
+              weight: 'normal', // Set title font weight
+            },
+            color: 'rgba(255, 255, 255, 1)'
           },
           beginAtZero: true, // Ensure Y-axis starts at 0
           //max:data_tot[4]
+          ticks: {
+            color: 'rgba(255, 255, 255, 1)', // Set ticks (axis labels) color to white
+            font: {
+              size: 18, // Set ticks font size
+              family: 'sans-serif', // Set font family for ticks
+              weight: 'normal', // Set ticks font weight
+            },
+          },
         },
       }
 
@@ -799,6 +828,12 @@ export class CustomBubble extends React.Component {
           display: true,  // Display the legend
           labels: {
             usePointStyle: true,  // Use the point style (circle) for legend markers
+            font: {
+              size: 18,  // Set the font size for the legend
+              family: 'sans-serif', // Optional: Set font family if desired
+              weight: 'normal',  // Optional: Set font weight
+            },
+            color: 'rgba(255, 255, 255, 1)', // Set the color to white
           },
         },
         zoom: {

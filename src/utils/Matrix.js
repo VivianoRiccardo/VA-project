@@ -859,6 +859,7 @@ export default class CustomMatrix extends React.Component {
   };
   // Example function to determine color based on type
   getColor(type, opacity){
+    opacity = 0.8
     opacity = opacity.toString()
     const colors = {
       "Gas Giant": "rgba(152,78,163,"+opacity+")",
@@ -924,7 +925,14 @@ export default class CustomMatrix extends React.Component {
         display: true,
         labels: {
           usePointStyle: true,
+          font: {
+            size: 18,  // Set the font size for the legend
+            family: 'sans-serif', // Optional: Set font family if desired
+            weight: 'normal',  // Optional: Set font weight
+          },
+          color: 'rgba(255, 255, 255, 1)', // Set the color to white
         },
+        
       },
       zoom: {
         zoom: {

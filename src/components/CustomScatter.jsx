@@ -261,7 +261,7 @@ export default class CustomScatter extends React.Component{
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <div style={{ display: "flex" }}>
             <div className="checkboxes">
-              <label style = {{color:"grey"}}>
+              <label style = {{color:"white", font: "normal 18px sans-serif"}}>
                 <input
                   type="checkbox"
                   name="massDisplayFlag"
@@ -272,7 +272,7 @@ export default class CustomScatter extends React.Component{
               </label>
             </div>
             <div className="checkboxes">
-              <label style = {{color:"grey"}}>
+              <label style = {{color:"white", font: "normal 18px sans-serif"}}>
                 <input
                   type="checkbox"
                   name="stDistanceFlag"
@@ -283,7 +283,7 @@ export default class CustomScatter extends React.Component{
               </label>
             </div>
             <div className="checkboxes">
-              <label style = {{color:"grey"}}>
+              <label style = {{color:"white", font: "normal 18px sans-serif"}}>
                 <input
                   type="checkbox"
                   name="plRadjFlag"
@@ -294,7 +294,7 @@ export default class CustomScatter extends React.Component{
               </label>
             </div>
             <div className="checkboxes">
-              <label style = {{color:"grey"}}>
+              <label style = {{color:"white", font: "normal 18px sans-serif"}}>
                 <input
                   type="checkbox"
                   name="planetTypeFlag"
@@ -305,7 +305,7 @@ export default class CustomScatter extends React.Component{
               </label>
             </div>
             <div className="checkboxes">
-              <label style = {{color:"grey"}}>
+              <label style = {{color:"white", font: "normal 18px sans-serif"}}>
                 <input
                   type="checkbox"
                   name="planetTypeFlag"
@@ -318,7 +318,7 @@ export default class CustomScatter extends React.Component{
 
           </div>
           <div>
-            <select onChange={this.handleSelectChange} value={this.state.selectedType}>
+            <select onChange={this.handleSelectChange} value={this.state.selectedType} style = {{font: "normal 18px sans-serif"}}>
               <option value={"planet_type"}>Planet Type</option>
               <option value={"pl_discmethod"}>Planet Discmethod</option>
               <option value={"stellar_type"}>Star Type</option>
@@ -327,7 +327,7 @@ export default class CustomScatter extends React.Component{
         </div>
          <div style={{ display: "flex" }}>
           <div className="checkboxes">
-            <label style = {{color:"grey"}}>
+            <label style = {{color:"white", font: "normal 18px sans-serif"}}>
               Learning Rate:
               <input
                 type="number"
@@ -337,7 +337,7 @@ export default class CustomScatter extends React.Component{
             </label>
           </div>
           <div className="checkboxes">
-            <label style = {{color:"grey"}}>
+            <label style = {{color:"white", font: "normal 18px sans-serif"}}>
               Maximum Steps:
               <input
                 type="number"
@@ -347,13 +347,13 @@ export default class CustomScatter extends React.Component{
             </label>
           </div>
         </div> 
-        <button className="checkboxes" onClick={this.handleConfirmChanges}>
+        <button className="checkboxes" onClick={this.handleConfirmChanges} style = {{font: "normal 18px sans-serif"}}>
           Confirm Changes
         </button>
-        <button className="checkboxes" onClick={this.handleResetFilter}>
+        <button className="checkboxes" onClick={this.handleResetFilter} style = {{font: "normal 18px sans-serif"}}>
           Reset Filter
         </button>
-        <button className="checkboxes" onClick={this.handleZoom}>
+        <button className="checkboxes" onClick={this.handleZoom} style = {{font: "normal 18px sans-serif"}}>
           {this.state.zoom?"Disable zoom":"Enable zoom"}
         </button>
       </div>

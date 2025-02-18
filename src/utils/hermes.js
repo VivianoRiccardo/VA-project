@@ -99,12 +99,11 @@ const ActionType = {
           width: 8
         },
         label: {
-          fillStyle: "rgba(0, 0, 0, 1.0)",
-          font: "normal 11px sans-serif",
+          fillStyle: "white",
+          font: "normal 18px sans-serif",
           lineWidth: 3,
           offset: 4,
           placement: LabelPlacement.After,
-          strokeStyle: "rgba(255, 255, 255, 1.0)"
         },
         labelActive: {fillStyle: "rgba(0, 0, 0, 1.0)"},
         labelHover: {fillStyle: "rgba(0, 0, 0, 1.0)"},
@@ -138,12 +137,11 @@ const ActionType = {
         label: {
           angle: void 0,
           boundaryPadding: 5,
-          fillStyle: "rgba(0, 0, 0, 1.0)",
-          font: "normal 11px sans-serif",
+          fillStyle: "white",
+          font: "normal 18px sans-serif",
           lineWidth: 3,
           offset: 16,
           placement: LabelPlacement.Before,
-          strokeStyle: "rgba(255, 255, 255, 1.0)"
         },
         labelActive: {fillStyle: "rgba(99, 200, 255, 1.0)"},
         labelHover: {fillStyle: "rgba(79, 180, 246, 1.0)"},
@@ -1946,7 +1944,8 @@ const ActionType = {
       const entry = entries.find((entry2) => entry2.target === this.element);
       if (!entry)
         return;
-      const {width: w, height: h} = entry.contentRect;
+      let {width: w, height: h} = entry.contentRect;
+      h =  document.documentElement.scrollHeight/2;
       this.setSize(w, h);
     }
     handleDoubleClick() {
