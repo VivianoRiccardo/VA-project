@@ -2,7 +2,7 @@
 
 # Demo
 
-www.visual-analytics.netlify.app
+[www.visual-analytics.netlify.app](https://visual-analytics.netlify.app/)
 
 # Report
 
